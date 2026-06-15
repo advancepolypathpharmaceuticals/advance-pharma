@@ -442,7 +442,6 @@
         const superAdminRegisterForm = document.getElementById('superAdminRegisterForm');
         if (superAdminRegisterForm) {
             superAdminRegisterForm.addEventListener('submit', function (e) {
-                e.preventDefault();
                 clearAllErrors();
 
                 const firstName = document.getElementById('super-firstName').value;
@@ -506,15 +505,13 @@
 
                 console.log('Super Admin form validation - hasError:', hasError);
 
-                if (!hasError) {
-                    console.log('Validation passed');
-
-                    superAdminRegisterForm.removeEventListener('submit', arguments.callee);
-
-                    return;
-                } else {
+                if (hasError) {
+                    e.preventDefault();
                     console.log('Form has validation errors, preventing submission');
+                    return false;
                 }
+
+                console.log('Validation passed');
             });
         }
 
