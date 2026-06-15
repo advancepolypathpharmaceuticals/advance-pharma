@@ -3,7 +3,7 @@ const axios = require("axios");
 async function verifyRecaptcha(token) {
   try {
     const response = await axios.post(
-      `https://www.google.com/recaptcha/api/siteverify`,
+      "https://www.google.com/recaptcha/api/siteverify",
       null,
       {
         params: {
@@ -12,6 +12,8 @@ async function verifyRecaptcha(token) {
         },
       }
     );
+
+    console.log("RECAPTCHA RESPONSE:", response.data);
 
     return response.data.success && response.data.score > 0.5;
 
