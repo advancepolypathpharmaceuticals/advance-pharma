@@ -1,17 +1,12 @@
 const verifyRecaptcha = require("../helpers/recaptcha");
 
 module.exports = async (req, res, next) => {
-  const token = req.body?.recaptchaToken;
 
-  console.log("TOKEN:", token ? "PRESENT" : "MISSING");
+    console.log("================================");
+    console.log("URL:", req.originalUrl);
+    console.log("BODY:", req.body);
+    console.log("TOKEN:", req.body?.recaptchaToken);
+    console.log("================================");
 
-  if (!token) {
-    return res.status(400).send("reCAPTCHA token missing");
-  }
-
-  const verified = await verifyRecaptcha(token);
-
-  console.log("VERIFIED:", verified);
-
-  next(); // TEMPORARY
+    return next();
 };
