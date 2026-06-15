@@ -18,13 +18,13 @@ app.use(express.json());
 // Session setup (must come BEFORE res.locals usage)
 app.use(session({
     secret: process.env.SESSION_SECRET_KEY || "default_secret",
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
     cookie: {
-    secure: true,
-    httpOnly: true,
-    maxAge: 1000 * 60 * 60 * 24
-}
+        secure: process.env.NODE_ENV === "production",
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24
+    }
 }));
 
 
