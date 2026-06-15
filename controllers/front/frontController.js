@@ -14,7 +14,7 @@ async function homePage(req, res) {
     let teams = await Team.find();
     let services = await Service.find(
       {},
-      { name: 1, pic: 1, shortDescription: 1, price: 1 }
+      { name: 1, pic: 1, shortDescription: 1, price: 1 },
     ).sort({ _id: -1 });
     let faqs = await Faq.find();
     let testimonials = await Testimonial.find();
@@ -62,7 +62,7 @@ async function servicePage(req, res) {
   let teams = await Team.find();
   let services = await Service.find(
     {},
-    { name: 1, pic: 1, shortDescription: 1, price: 1 }
+    { name: 1, pic: 1, shortDescription: 1, price: 1 },
   ).sort({ _id: -1 });
   let faqs = await Faq.find();
   let testimonials = await Testimonial.find();
@@ -78,7 +78,7 @@ async function servicePage(req, res) {
 async function serviceShowPage(req, res) {
   let services = await Service.find(
     {},
-    { name: 1, pic: 1, shortDescription: 1, price: 1 }
+    { name: 1, pic: 1, shortDescription: 1, price: 1 },
   ).sort({ _id: -1 });
   let service = await Service.findOne({ _id: req.params._id });
   let faqs = await Faq.find();
@@ -96,7 +96,7 @@ async function allProductPage(req, res) {
     // Fetch all products
     const services = await Service.find(
       {},
-      { name: 1, pic: 1, shortDescription: 1, price: 1 }
+      { name: 1, pic: 1, shortDescription: 1, price: 1 },
     ).sort({ _id: -1 });
 
     res.render("allProductPage", {
@@ -227,7 +227,7 @@ async function contactStorePage(req, res) {
       },
       (error) => {
         if (error) console.log(error);
-      }
+      },
     );
     mailer.sendMail(
       {
@@ -295,7 +295,7 @@ async function contactStorePage(req, res) {
       },
       (error) => {
         if (error) console.log(error);
-      }
+      },
     );
     res.render("contactPage", {
       session: req.session,
@@ -404,7 +404,7 @@ async function careerStorePage(req, res) {
     // Create career data with file path
 
     const resumeURL = `${req.protocol}://${req.get(
-      "host"
+      "host",
     )}/uploads/resume/${req.file.filename}`;
 
     const careerData = {
@@ -496,14 +496,15 @@ async function careerStorePage(req, res) {
       (error) => {
         if (error) console.log("Email error:", error);
         else console.log("Acknowledgement email sent");
-      }
+      },
     );
 
-    mailer.sendMail({
-      from: process.env.MAIL_SENDER,
-      to: process.env.MAIL_SENDER,
-      subject: "Career Application Alert: New Submission Received",
-      html: `
+    mailer.sendMail(
+      {
+        from: process.env.MAIL_SENDER,
+        to: process.env.MAIL_SENDER,
+        subject: "Career Application Alert: New Submission Received",
+        html: `
         <div style="font-family: Arial, Helvetica, sans-serif; max-width:650px; margin:auto; padding:20px; border:1px solid #e0e0e0; border-radius:8px; background:#f9f9f9;">
           <h2 style="color:#00d084; text-align:center; text-decoration:underline; margin-bottom:20px;">
             New Career Application Received
@@ -546,12 +547,13 @@ async function careerStorePage(req, res) {
             This is an automated notification. Please log in to the admin panel for more details.
           </p>
         </div>
-      `
-    }, (error) => {
-      if (error) console.log("Admin email error:", error);
-    });
-    
-    
+      `,
+      },
+      (error) => {
+        if (error) console.log("Admin email error:", error);
+      },
+    );
+
     // Render success page
     res.render("careerPage", {
       session: req.session,
@@ -656,36 +658,42 @@ function errorPage(req, res) {
 
 // Registration functions
 async function registerPage(req, res) {
-    res.redirect('/login?tab=register');
+  res.redirect("/login?tab=register");
 }
 
 async function registerStore(req, res) {
   try {
-    const { firstName, lastName, email, phone, password, confirmPassword } = req.body;
-    
-    console.log('📝 Registration attempt:', { firstName, lastName, email, phone });
-    console.log('📸 File uploaded:', req.file ? req.file.filename : 'No file');
-    
+    const { firstName, lastName, email, phone, password, confirmPassword } =
+      req.body;
+
+    console.log("📝 Registration attempt:", {
+      firstName,
+      lastName,
+      email,
+      phone,
+    });
+    console.log("📸 File uploaded:", req.file ? req.file.filename : "No file");
+
     // Validation
     if (password !== confirmPassword) {
-      console.log('❌ Password mismatch');
+      console.log("❌ Password mismatch");
       return res.redirect("/login?tab=register&error=password_mismatch");
     }
-    
+
     // Check if user already exists
     const existingUser = await User.findOne({
-      $or: [{ email: email }, { username: email }]
+      $or: [{ email: email }, { username: email }],
     });
-    
+
     if (existingUser) {
-      console.log('❌ User already exists:', {
+      console.log("❌ User already exists:", {
         existingEmail: existingUser.email,
         existingUsername: existingUser.username,
-        attemptedEmail: email
+        attemptedEmail: email,
       });
       return res.redirect("/login?tab=register&error=user_exists");
     }
-    
+
     // Create new user
     const newUser = new User({
       firstName: firstName,
@@ -694,49 +702,48 @@ async function registerStore(req, res) {
       username: email, // Using email as username
       phone: phone,
       password: password,
-      role: "Customer"
+      role: "Customer",
     });
-    
+
     // Handle profile picture if uploaded
     if (req.file) {
       newUser.pic = req.file.filename;
-      console.log('🖼️ Profile picture saved:', newUser.pic);
+      console.log("🖼️ Profile picture saved:", newUser.pic);
     }
-    
+
     await newUser.save();
-    
-    console.log('✅ User created:', {
+
+    console.log("✅ User created:", {
       id: newUser._id,
       name: `${firstName} ${lastName}`,
       email: newUser.email,
-      pic: newUser.pic || 'No profile picture'
+      pic: newUser.pic || "No profile picture",
     });
-    
+
     // Redirect to login with success message
     res.redirect("/login?success=true&tab=login");
-    
   } catch (error) {
     console.log("❌ Registration error:", error);
-    
+
     // Handle specific errors
     if (error.code === 11000) {
       return res.redirect("/login?tab=register&error=user_exists");
     }
-    
+
     res.redirect("/login?tab=register&error=registration_failed");
   }
 }
 
 async function login(req, res) {
-  const activeTab = req.query.tab === 'register' ? 'register' : 'login';
-  
+  const activeTab = req.query.tab === "register" ? "register" : "login";
+
   res.render("login", {
     session: req.session,
     title: "Login",
     errorMessage: {},
     data: req.body || {},
     query: req.query,
-    activeTab: activeTab
+    activeTab: activeTab,
   });
 }
 
@@ -744,60 +751,57 @@ async function login(req, res) {
 async function loginStore(req, res) {
   try {
     const { username, password } = req.body;
-    
-    console.log('🔐 Login attempt:', { username });
-    
+
+    console.log("🔐 Login attempt:", { username });
+
     // Find user by username OR email
     const user = await User.findOne({
-      $or: [
-        { username: username },
-        { email: username }
-      ]
+      $or: [{ username: username }, { email: username }],
     });
-    
+
     if (!user) {
-      console.log('❌ User not found:', username);
+      console.log("❌ User not found:", username);
       return res.redirect("/login?error=invalid_credentials");
     }
-    
-    console.log('👤 User found:', { 
-      id: user._id, 
-      username: user.username, 
+
+    console.log("👤 User found:", {
+      id: user._id,
+      username: user.username,
       email: user.email,
       role: user.role,
       firstName: user.firstName,
       lastName: user.lastName,
       name: user.name,
-      phone: user.phone
+      phone: user.phone,
     });
-    
+
     // DEBUG: Log the password comparison
-    console.log('🔑 Password comparison:', {
+    console.log("🔑 Password comparison:", {
       inputPassword: password,
       storedPassword: user.password,
-      match: password === user.password
+      match: password === user.password,
     });
-    
+
     // Compare passwords directly (without bcrypt)
     if (password !== user.password) {
-      console.log('❌ Invalid password for user:', username);
+      console.log("❌ Invalid password for user:", username);
       return res.redirect("/login?error=invalid_credentials");
     }
-    
+
     // Set session data PROPERLY with all user information
     req.session.login = true;
     req.session.userid = user._id;
     req.session.role = user.role;
     req.session.email = user.email;
     req.session.username = user.username;
-    req.session.phone = user.phone || '';
+    req.session.phone = user.phone || "";
     req.session.pic = user.pic || "";
-    
+
     // SET NAME PROPERLY - FIXED
-    if (user.name && user.name.trim() !== '') {
+    if (user.name && user.name.trim() !== "") {
       req.session.name = user.name;
-      req.session.firstName = user.firstName || '';
-      req.session.lastName = user.lastName || '';
+      req.session.firstName = user.firstName || "";
+      req.session.lastName = user.lastName || "";
     } else if (user.firstName && user.lastName) {
       req.session.name = `${user.firstName} ${user.lastName}`.trim();
       req.session.firstName = user.firstName;
@@ -805,36 +809,50 @@ async function loginStore(req, res) {
     } else if (user.firstName) {
       req.session.name = user.firstName;
       req.session.firstName = user.firstName;
-      req.session.lastName = '';
+      req.session.lastName = "";
     } else if (user.lastName) {
       req.session.name = user.lastName;
-      req.session.firstName = '';
+      req.session.firstName = "";
       req.session.lastName = user.lastName;
     } else if (user.username) {
       req.session.name = user.username;
       req.session.firstName = user.username;
-      req.session.lastName = '';
+      req.session.lastName = "";
     } else {
-      req.session.name = user.email.split('@')[0];
-      req.session.firstName = user.email.split('@')[0];
-      req.session.lastName = '';
+      req.session.name = user.email.split("@")[0];
+      req.session.firstName = user.email.split("@")[0];
+      req.session.lastName = "";
     }
-    
-    console.log('✅ Login successful - Session data:', {
+
+    console.log("✅ Login successful - Session data:", {
       name: req.session.name,
       firstName: req.session.firstName,
       lastName: req.session.lastName,
       role: user.role,
       email: user.email,
-      phone: req.session.phone
+      phone: req.session.phone,
     });
-    
-    // Redirect based on role
-    if (user.role === 'Customer') {
-      res.redirect("/customer");
-    } else {
-      res.redirect("/admin");
-    }
+
+    // Save session before redirect
+    req.session.save((err) => {
+      if (err) {
+        console.log("SESSION SAVE ERROR:", err);
+        return res.redirect("/login?error=session_error");
+      }
+
+      req.session.save((err) => {
+        if (err) {
+          console.log(err);
+          return res.redirect("/login?error=session");
+        }
+
+        if (user.role === "Customer") {
+          return res.redirect("/customer");
+        } else {
+          return res.redirect("/admin");
+        }
+      });
+    });
   } catch (error) {
     console.log("❌ Login error:", error);
     res.redirect("/login?error=login_failed");
@@ -853,7 +871,7 @@ async function logout(req, res) {
 
 // Secret Super Admin Registration functions
 async function secretSuperAdminPage(req, res) {
-  const superAdminExists = await User.findOne({ role: 'Super Admin' });
+  const superAdminExists = await User.findOne({ role: "Super Admin" });
 
   if (superAdminExists) {
     // Instead of redirecting, show message on same page
@@ -863,7 +881,7 @@ async function secretSuperAdminPage(req, res) {
       errorMessage: { message: "Super Admin already exists." },
       data: {},
       query: req.query,
-      success: req.query.success
+      success: req.query.success,
     });
   }
 
@@ -873,31 +891,47 @@ async function secretSuperAdminPage(req, res) {
     errorMessage: {},
     data: {},
     query: req.query,
-    success: req.query.success
+    success: req.query.success,
   });
 }
 
-
 async function secretSuperAdminStore(req, res) {
   try {
-    const { firstName, lastName, email, username, phone, password, confirmPassword } = req.body;
-    
-    console.log('📝 Secret Super Admin Registration attempt:', { firstName, lastName, email, username, phone });
-    console.log('📸 File uploaded:', req.file ? req.file.filename : 'No file');
+    const {
+      firstName,
+      lastName,
+      email,
+      username,
+      phone,
+      password,
+      confirmPassword,
+    } = req.body;
+
+    console.log("📝 Secret Super Admin Registration attempt:", {
+      firstName,
+      lastName,
+      email,
+      username,
+      phone,
+    });
+    console.log("📸 File uploaded:", req.file ? req.file.filename : "No file");
 
     // Check if user already exists
     const existingUser = await User.findOne({
-      $or: [{ email: email }, { username: username }]
+      $or: [{ email: email }, { username: username }],
     });
 
     if (existingUser) {
-      console.log('❌ User already exists with same email or username:', { email, username });
+      console.log("❌ User already exists with same email or username:", {
+        email,
+        username,
+      });
       return res.redirect("/9tiVhuLQwl7bqF00oGoQ?error=user_exists");
     }
 
     // Validate password match
     if (password !== confirmPassword) {
-      console.log('❌ Password mismatch');
+      console.log("❌ Password mismatch");
       return res.redirect("/9tiVhuLQwl7bqF00oGoQ?error=password_mismatch");
     }
 
@@ -909,37 +943,36 @@ async function secretSuperAdminStore(req, res) {
       username,
       phone,
       password,
-      role: 'Super Admin'
+      role: "Super Admin",
     });
 
     // Handle profile picture if uploaded
     if (req.file) {
       newUser.pic = req.file.filename;
-      console.log('🖼️ Super Admin profile picture saved:', newUser.pic);
+      console.log("🖼️ Super Admin profile picture saved:", newUser.pic);
     }
 
     await newUser.save();
 
-    console.log('✅ Super Admin created successfully:', {
+    console.log("✅ Super Admin created successfully:", {
       id: newUser._id,
       name: `${firstName} ${lastName}`,
       email: newUser.email,
       username: newUser.username,
       role: newUser.role,
-      pic: newUser.pic || 'No profile picture'
+      pic: newUser.pic || "No profile picture",
     });
 
     // Redirect to form with success message
     res.redirect("/9tiVhuLQwl7bqF00oGoQ?success=true");
-
   } catch (error) {
     console.error("❌ Super Admin registration error:", error);
-    
+
     // Handle specific errors
     if (error.code === 11000) {
       return res.redirect("/9tiVhuLQwl7bqF00oGoQ?error=user_exists");
     }
-    
+
     res.redirect("/9tiVhuLQwl7bqF00oGoQ?error=registration_failed");
   }
 }
@@ -958,8 +991,8 @@ async function adminRegisterPage(req, res) {
       lastName: req.query.lastName || "",
       email: req.query.email || "",
       username: req.query.username || "",
-      phone: req.query.phone || ""
-    }
+      phone: req.query.phone || "",
+    },
   });
 }
 
@@ -979,24 +1012,24 @@ async function adminRegisterStore(req, res) {
       username,
       phone,
       password,
-      confirmPassword
+      confirmPassword,
     } = req.body;
 
     // 3) Basic validation – password
     if (password !== confirmPassword) {
       return res.redirect(
-        `/register-admin?error=password_mismatch&firstName=${encodeURIComponent(firstName || "")}&lastName=${encodeURIComponent(lastName || "")}&email=${encodeURIComponent(email || "")}&username=${encodeURIComponent(username || "")}&phone=${encodeURIComponent(phone || "")}`
+        `/register-admin?error=password_mismatch&firstName=${encodeURIComponent(firstName || "")}&lastName=${encodeURIComponent(lastName || "")}&email=${encodeURIComponent(email || "")}&username=${encodeURIComponent(username || "")}&phone=${encodeURIComponent(phone || "")}`,
       );
     }
 
     // 4) Check existing user by email OR username
     const existingUser = await User.findOne({
-      $or: [{ email }, { username }]
+      $or: [{ email }, { username }],
     });
 
     if (existingUser) {
       return res.redirect(
-        `/register-admin?error=user_exists&firstName=${encodeURIComponent(firstName || "")}&lastName=${encodeURIComponent(lastName || "")}&email=${encodeURIComponent(email || "")}&username=${encodeURIComponent(username || "")}&phone=${encodeURIComponent(phone || "")}`
+        `/register-admin?error=user_exists&firstName=${encodeURIComponent(firstName || "")}&lastName=${encodeURIComponent(lastName || "")}&email=${encodeURIComponent(email || "")}&username=${encodeURIComponent(username || "")}&phone=${encodeURIComponent(phone || "")}`,
       );
     }
 
@@ -1008,7 +1041,7 @@ async function adminRegisterStore(req, res) {
       username,
       phone,
       password,
-      role: "Admin"
+      role: "Admin",
     });
 
     if (req.file) {
@@ -1022,7 +1055,7 @@ async function adminRegisterStore(req, res) {
       id: newAdmin._id,
       email: newAdmin.email,
       username: newAdmin.username,
-      pic: newAdmin.pic
+      pic: newAdmin.pic,
     });
 
     // 6) Show success on same page
@@ -1038,7 +1071,6 @@ async function adminRegisterStore(req, res) {
     return res.redirect("/register-admin?error=registration_failed");
   }
 }
-
 
 // Password 1
 async function forgetPassword1(req, res) {
@@ -1058,7 +1090,7 @@ async function forgetPasswordStore1(req, res) {
       let otp = Number(
         parseInt(Math.random() * 1000000)
           .toString()
-          .padEnd(6, 0)
+          .padEnd(6, 0),
       );
       data.otp = otp;
       data.otpGenTime = new Date();
@@ -1112,7 +1144,7 @@ async function forgetPasswordStore1(req, res) {
         },
         (error) => {
           if (error) console.log(error);
-        }
+        },
       );
       req.session.resetPasswordUser = data.username;
       res.redirect("/forget-password-2");
