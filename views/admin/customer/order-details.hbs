@@ -1,0 +1,176 @@
+{{>header}}
+<title>Order Details - {{order.orderNumber}}</title>
+{{>navbar}}
+{{>hero}}
+<div class="site-section my-5">
+  <div class="container">
+    <div class="row">
+      <!-- Sidebar with Profile Picture -->
+      <div class="col-md-3 mb-4">
+        <!-- Profile Picture in Sidebar -->
+        <div class="card text-center mb-4">
+          <div class="card-body">
+            <div class="profile-pic-container mx-auto mb-3">
+              <img src="{{#if customer.pic}}/uploads/user/{{customer.pic}}{{else}}/img/default-profile.png{{/if}}" 
+                   class="rounded-circle border" 
+                   style="width: 100px; height: 100px; object-fit: cover;"
+                   alt="Profile Picture">
+            </div>
+            <h6 class="card-title mb-1">{{customer.firstName}} {{customer.lastName}}</h6>
+            <small class="text-muted">Customer</small>
+          </div>
+        </div>
+
+        <div class="list-group">
+          <a href="/customer" class="list-group-item list-group-item-action {{isActive '/customer'}}">
+            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+          </a>
+          <a href="/customer/orders" class="list-group-item list-group-item-action {{isActive '/customer/orders'}}">
+            <i class="fas fa-shopping-bag me-2"></i>Order History
+          </a>
+          <a href="/customer/profile" class="list-group-item list-group-item-action">
+            <i class="fas fa-user me-2"></i>My Profile
+          </a>
+          <a href="/logout" class="list-group-item list-group-item-action text-danger">
+            <i class="fas fa-sign-out-alt me-2"></i>Logout
+          </a>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="col-md-9">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="text-primary">Order Details</h2>
+          <a href="/customer/orders" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Orders
+          </a>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fas fa-receipt me-2"></i>Order Summary</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Order Number:</strong> {{order.orderNumber}}</p>
+                <p><strong>Order Date:</strong> {{dateHelper order.createdAt}}</p>
+                <p><strong>Payment Method:</strong> 
+                  {{#if (eq order.paymentMethod 'cash_on_delivery')}}
+                  Cash on Delivery
+                  {{else if (eq order.paymentMethod 'card')}}
+                  Credit/Debit Card
+                  {{else}}
+                  UPI Payment
+                  {{/if}}
+                </p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Order Status:</strong> 
+                  <span class="badge bg-{{getStatusColor order.status}}">
+                    <i class="fas fa-{{getStatusIcon order.status}} me-1"></i>
+                    {{capitalize order.status}}
+                  </span>
+                </p>
+                <p><strong>Payment Status:</strong> 
+                  <span class="badge bg-{{getPaymentStatusColor order.paymentStatus}}">
+                    <i class="fas fa-{{getPaymentStatusIcon order.paymentStatus}} me-1"></i>
+                    {{capitalize order.paymentStatus}}
+                  </span>
+                </p>
+                <p><strong>Total Amount:</strong> {{formatPrice order.total}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Items -->
+        <div class="card mb-4">
+          <div class="card-header bg-light">
+            <h5 class="mb-0"><i class="fas fa-shopping-bag me-2"></i>Order Items</h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead class="thead-light">
+                  <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each order.items}}
+                  <tr>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <img src="/{{userPic this.image}}" alt="{{this.name}}" 
+                             class="me-3" style="width:50px;height:50px;object-fit:cover;">
+                        <div>
+                          <h6 class="mb-0">{{this.name}}</h6>
+                        </div>
+                      </div>
+                    </td>
+                    <td>{{formatPrice this.price}}</td>
+                    <td>{{this.quantity}}</td>
+                    <td>{{formatPrice this.total}}</td>
+                  </tr>
+                  {{/each}}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
+                    <td><strong>{{formatPrice order.subtotal}}</strong></td>
+                  </tr>
+                  {{#if order.discount.amount}}
+                  <tr>
+                    <td colspan="3" class="text-end text-success"><strong>Discount:</strong></td>
+                    <td class="text-success"><strong>- {{formatPrice order.discount.amount}}</strong></td>
+                  </tr>
+                  {{/if}}
+                  <tr>
+                    <td colspan="3" class="text-end"><strong>Shipping:</strong></td>
+                    <td>
+                      <strong>
+                        {{#if order.shipping}}
+                          {{formatPrice order.shipping}}
+                        {{else}}
+                          FREE
+                        {{/if}}
+                      </strong>
+                    </td>
+                  </tr>
+                  <tr class="table-active">
+                    <td colspan="3" class="text-end"><strong>Total Amount:</strong></td>
+                    <td><strong>{{formatPrice order.total}}</strong></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shipping Address -->
+        <div class="card">
+          <div class="card-header bg-light">
+            <h5 class="mb-0"><i class="fas fa-truck me-2"></i>Shipping Address</h5>
+          </div>
+          <div class="card-body">
+            <p class="mb-1"><strong>{{order.shippingAddress.firstName}} {{order.shippingAddress.lastName}}</strong></p>
+            <p class="mb-1">{{order.shippingAddress.address}}</p>
+            {{#if order.shippingAddress.address2}}
+            <p class="mb-1">{{order.shippingAddress.address2}}</p>
+            {{/if}}
+            <p class="mb-1">{{order.shippingAddress.city}}, {{order.shippingAddress.state}} - {{order.shippingAddress.zipCode}}</p>
+            <p class="mb-1">{{order.shippingAddress.phone}}</p>
+            <p class="mb-0">{{order.shippingAddress.email}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{>footer}}

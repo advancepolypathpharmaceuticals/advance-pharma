@@ -1,0 +1,180 @@
+{{>header}}
+<title>Admin Dashboard | Edit Users</title>
+{{>navbar}}
+
+{{>hero}}
+<div class="container-fluid my-3">
+    <div class="row">
+        <div class="col-md-3 my-3">
+            {{>sidebar}}
+        </div>
+        <div class="col-md-9 my-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="bg-primary text-center p-2 text-light flex-grow-1 me-3">Update User</h5>
+                <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+
+            <form action="/admin/user/update/{{data._id}}" method="post" enctype="multipart/form-data">
+                <div class="row">
+                    <!-- Profile Picture Upload -->
+                    <div class="col-12 mb-4">
+                        <div class="text-center">
+                            <div class="profile-pic-container mx-auto mb-3">
+                                <img id="profilePicPreview"
+                                    src="{{#if data.pic}}/uploads/user/{{data.pic}}{{else}}/img/default-profile.png{{/if}}"
+                                    class="rounded-circle border"
+                                    style="width: 150px; height: 150px; object-fit: cover; cursor: pointer;"
+                                    onclick="document.getElementById('pic').click()">
+                                <input type="file" id="pic" name="pic" class="d-none" accept="image/*"
+                                    onchange="previewImage(this)">
+                                <div class="mt-2">
+                                    <small class="text-muted">Click image to change profile picture (JPEG, PNG, GIF,
+                                        WebP - Max 2MB)</small>
+                                </div>
+                            </div>
+                        </div>
+                        {{#if errorMessage.pic}}
+                        <p class="text-danger text-center">{{errorMessage.pic}}</p>
+                        {{/if}}
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input type="text" name="firstName" class="form-control border-2 border-primary"
+                                placeholder="First Name" value="{{data.firstName}}" required>
+                            <label>First Name*</label>
+                        </div>
+                        {{#if errorMessage.firstName}}
+                        <p class="text-danger">{{errorMessage.firstName}}</p>
+                        {{/if}}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input type="text" name="lastName" class="form-control border-2 border-primary"
+                                placeholder="Last Name" value="{{data.lastName}}" required>
+                            <label>Last Name*</label>
+                        </div>
+                        {{#if errorMessage.lastName}}
+                        <p class="text-danger">{{errorMessage.lastName}}</p>
+                        {{/if}}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input type="text" name="username" class="form-control border-2 border-primary"
+                                placeholder="Username" value="{{data.username}}" required>
+                            <label>Username*</label>
+                        </div>
+                        {{#if errorMessage.username}}
+                        <p class="text-danger">{{errorMessage.username}}</p>
+                        {{/if}}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input type="email" name="email" class="form-control border-2 border-primary"
+                                placeholder="Email" value="{{data.email}}" required>
+                            <label>Email Address*</label>
+                        </div>
+                        {{#if errorMessage.email}}
+                        <p class="text-danger">{{errorMessage.email}}</p>
+                        {{/if}}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input type="tel" name="phone" class="form-control border-2 border-primary"
+                                placeholder="Phone Number" value="{{data.phone}}" required>
+                            <label>Phone Number*</label>
+                        </div>
+                        {{#if errorMessage.phone}}
+                        <p class="text-danger">{{errorMessage.phone}}</p>
+                        {{/if}}
+                    </div>
+
+                    <!-- Role Dropdown - Conditionally Show Based on Current Role -->
+                    {{#if (eq data.role "Admin")}}
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <select name="role" class="form-control border-2 border-primary" required>
+                                <option value="Admin" {{dropdownCheck data.role "Admin" }}>Admin</option>
+                                <option value="Super Admin" {{dropdownCheck data.role "Super Admin" }}>Super Admin
+                                </option>
+                            </select>
+                            <label>User Role*</label>
+                        </div>
+                    </div>
+                    {{else if (eq data.role "Super Admin")}}
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <select name="role" class="form-control border-2 border-primary" required>
+                                <option value="Admin" {{dropdownCheck data.role "Admin" }}>Admin</option>
+                                <option value="Super Admin" {{dropdownCheck data.role "Super Admin" }}>Super Admin
+                                </option>
+                            </select>
+                            <label>User Role*</label>
+                        </div>
+                    </div>
+                    {{else}}
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control border-2 border-primary"
+                                value="{{capitalize data.role}}" readonly disabled>
+                            <input type="hidden" name="role" value="{{data.role}}">
+                            <label>User Role</label>
+                        </div>
+                        <small class="text-muted">Customer role cannot be changed</small>
+                    </div>
+                    {{/if}}
+
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <select name="isActive" class="form-control border-2 border-primary" required>
+                                <option value="true" {{#if data.isActive}}selected{{/if}}>Active</option>
+                                <option value="false" {{#unless data.isActive}}selected{{/unless}}>Inactive</option>
+                            </select>
+                            <label>Active Status*</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input type="password" name="password" class="form-control border-2 border-primary"
+                                placeholder="Password">
+                            <label>Password (Leave blank to keep current)</label>
+                        </div>
+                        {{#if errorMessage.password}}
+                        <p class="text-danger">{{errorMessage.password}}</p>
+                        {{/if}}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input type="password" name="confirmPassword" class="form-control border-2 border-primary"
+                                placeholder="Confirm Password">
+                            <label>Confirm Password</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary w-100">Update User</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function previewImage(input) {
+        const preview = document.getElementById('profilePicPreview');
+        const file = input.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+{{>footer}}

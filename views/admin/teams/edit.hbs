@@ -1,0 +1,76 @@
+{{>header}}
+<title>Admin Dashboard | Edit Team Member</title>
+{{>navbar}}
+
+{{>hero}}
+<div class="container-fluid my-3">
+    <div class="row">
+        <div class="col-md-3 my-3">
+            {{>sidebar}}
+        </div>
+        <div class="col-md-9 my-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="bg-primary text-center p-2 text-light flex-grow-1 me-3">Update Team Member</h5>
+                <a href="/admin/team" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+            
+            <form action="/admin/team/update/{{data._id}}" method="post" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input type="text" name="name" class="form-control border-2 border-primary"
+                                placeholder="Product Name" value="{{data.name}}">
+                                {{#if errorMessage.name}}
+                                <p class="text-danger">{{errorMessage.name}}</p>
+                                {{/if}}
+                            <label>Product Name*</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input type="file" name="pic" class="form-control border-2 border-primary"
+                                placeholder="Product Image">
+                            <label>Upload Image</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <input name="designation" class="form-control border-2 border-primary"
+                                placeholder="Member Designation" id="designation">{{data.designation}}</input>
+                                {{#if errorMessage.designation}}
+                                <p class="text-danger">{{errorMessage.designation}}</p>
+                                {{/if}}
+                            <label for="designation">Member Designation</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>Facebook Profile Link</label>
+                            <input type="url" name="facebook" placeholder="Facebook Profile Link" class="form-control border-2 border-primary" value="{{data.facebook}}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Twitter Profile Link</label>
+                            <input type="url" name="twitter" placeholder="Twitter Profile Link" class="form-control border-2 border-primary" value="{{data.twitter}}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>Linkedin Profile Link</label>
+                            <input type="url" name="linkedin" placeholder="Linkedin Profile Link" class="form-control border-2 border-primary" value="{{data.linkedin}}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Instagram Profile Link</label>
+                            <input type="url" name="instagram" placeholder="Instagram Profile Link" class="form-control border-2 border-primary" value="{{data.instagram}}">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary w-100">Update</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{>footer}}

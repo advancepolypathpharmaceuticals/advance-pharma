@@ -1,0 +1,812 @@
+{{>header}}
+<title>Advance Poly Pathic Pharmaceuticals Limited</title>
+{{>navbar}}
+{{>hero}}
+
+<div class="site-section my-5">
+  <div class="container">
+
+    <!-- Error Display Section -->
+    {{#if error}}
+    <div class="row mb-3">
+      <div class="col-md-12">
+        <div class="alert alert-danger alert-dismissible fade show">
+          {{#if (eq error "missing_fields")}}
+          <strong>Error!</strong> Please fill in all required fields.
+          {{else if (eq error "order_failed")}}
+          <strong>Error!</strong> There was a problem processing your order. Please try again.
+          {{else if (eq error "empty_cart")}}
+          <strong>Error!</strong> Your cart is empty. Please add products first.
+          {{else if (eq error "account_exists")}}
+          <strong>Account Already Exists!</strong> An account with this email or phone number already exists. Please <a
+            href="/login" class="alert-link">login</a> or continue without creating an account.
+          {{else if (eq error "account_creation_failed")}}
+          <strong>Account Creation Failed!</strong> Please try different credentials or continue without creating an
+          account.
+          {{else if (eq error "validation_failed")}}
+          <strong>Validation Error!</strong> Please fill in all required fields correctly.
+          {{else}}
+          <strong>Error!</strong> Something went wrong. Please try again.
+          {{/if}}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      </div>
+    </div>
+    {{/if}}
+
+    <!-- Cart Empty Warning -->
+    {{#unless cart}}
+    <div class="row mb-3">
+      <div class="col-md-12">
+        <div class="alert alert-warning">
+          <strong>Your cart is empty!</strong> <a href="/service" class="alert-link">Continue shopping</a> to add
+          products.
+        </div>
+      </div>
+    </div>
+    {{/unless}}
+
+    <!-- Customer Welcome Message -->
+    {{#if session.login}}
+    <div class="row mb-3">
+      <div class="col-md-12">
+        <div class="alert alert-success">
+          <i class="fas fa-user-check me-2"></i>
+          <strong>Welcome back, {{session.name}}!</strong> Your information has been auto-filled. Please review and
+          complete your order.
+        </div>
+      </div>
+    </div>
+    {{/if}}
+
+    <!-- Returning Customer -->
+    <div class="row mb-5">
+      <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="bg-primary text-light p-2 flex-grow-1 me-3 text-center m-0">
+            {{#if session.login}}
+            Logged In as {{session.name}}
+            {{else}}
+            Returning Customer?
+            {{/if}}
+          </h5>
+          {{#unless session.login}}
+          <a href="/login" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-sign-in-alt me-1"></i> Click to Login
+          </a>
+          {{else}}
+          <a href="/customer" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-user me-1"></i> My Account
+          </a>
+          {{/unless}}
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center">
+          <p class="mb-0 flex-grow-1 me-3">
+            {{#if session.login}}
+            You're logged in. Your details are pre-filled below.
+            {{else}}
+            Already have items in your cart?
+            {{/if}}
+          </p>
+          <a href="/cart" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-arrow-left me-1"></i> Back To Cart
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- Billing Form -->
+      <div class="col-md-6 mb-5 mb-md-0">
+        <h2 class="h3 mb-3 text-primary">Billing Details</h2>
+        <div class="p-3 p-lg-5 border">
+          <form id="checkoutForm" action="/checkout/place-order" method="post">
+            <input type="hidden" name="recaptchaToken" id="checkoutRecaptchaToken">
+
+            <!-- Name -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <div class="form-floating">
+                  <input type="text" class="form-control border-2 border-primary" id="c_fname" name="c_fname"
+                    placeholder="First Name" required
+                    value="{{#if session.login}}{{session.firstName}}{{else}}{{data.c_fname}}{{/if}}">
+                  <label for="c_fname">First Name*</label>
+                  {{#if errorMessage.c_fname}}<p class="text-danger">{{errorMessage.c_fname}}</p>{{/if}}
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="form-floating">
+                  <input type="text" class="form-control border-2 border-primary" id="c_lname" name="c_lname"
+                    placeholder="Last Name" required
+                    value="{{#if session.login}}{{session.lastName}}{{else}}{{data.c_lname}}{{/if}}">
+                  <label for="c_lname">Last Name*</label>
+                  {{#if errorMessage.c_lname}}<p class="text-danger">{{errorMessage.c_lname}}</p>{{/if}}
+                </div>
+              </div>
+            </div>
+
+            <!-- Company -->
+            <div class="mb-3">
+              <div class="form-floating">
+                <input type="text" class="form-control border-2 border-primary" id="c_companyname" name="c_companyname"
+                  placeholder="Company Name" value="{{data.c_companyname}}">
+                <label for="c_companyname">Company Name (Optional)</label>
+              </div>
+            </div>
+
+            <!-- Address -->
+            <div class="mb-3">
+              <div class="form-floating">
+                <input type="text" class="form-control border-2 border-primary" id="c_address" name="c_address"
+                  placeholder="Street Address" required value="{{data.c_address}}">
+                <label for="c_address">Street Address*</label>
+                {{#if errorMessage.c_address}}<p class="text-danger">{{errorMessage.c_address}}</p>{{/if}}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <div class="form-floating">
+                <input type="text" class="form-control border-2 border-primary" id="c_address2" name="c_address2"
+                  placeholder="Apartment, suite, unit etc." value="{{data.c_address2}}">
+                <label for="c_address2">Apartment, Suite, Unit (Optional)</label>
+              </div>
+            </div>
+
+            <!-- City / State -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <div class="form-floating">
+                  <input type="text" class="form-control border-2 border-primary" id="c_city" name="c_city"
+                    placeholder="Town/City" required value="{{data.c_city}}">
+                  <label for="c_city">Town/City*</label>
+                  {{#if errorMessage.c_city}}<p class="text-danger">{{errorMessage.c_city}}</p>{{/if}}
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="form-floating">
+                  <input type="text" class="form-control border-2 border-primary" id="c_state_country"
+                    name="c_state_country" placeholder="State" required value="{{data.c_state_country}}">
+                  <label for="c_state_country">State*</label>
+                  {{#if errorMessage.c_state_country}}<p class="text-danger">{{errorMessage.c_state_country}}</p>{{/if}}
+                </div>
+              </div>
+            </div>
+
+            <!-- ZIP / Email -->
+            <div class="row mb-3">
+              <div class="col-md-6 mb-3">
+                <div class="form-floating">
+                  <input type="text" class="form-control border-2 border-primary" id="c_postal_zip" name="c_postal_zip"
+                    placeholder="ZIP Code" required value="{{data.c_postal_zip}}">
+                  <label for="c_postal_zip">ZIP Code*</label>
+                  {{#if errorMessage.c_postal_zip}}<p class="text-danger">{{errorMessage.c_postal_zip}}</p>{{/if}}
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="form-floating">
+                  <input type="email" class="form-control border-2 border-primary" id="c_email" name="c_email"
+                    placeholder="Email Address" required
+                    value="{{#if session.login}}{{session.email}}{{else}}{{data.c_email}}{{/if}}">
+                  <label for="c_email">Email Address*</label>
+                  {{#if errorMessage.c_email}}<p class="text-danger">{{errorMessage.c_email}}</p>{{/if}}
+                </div>
+              </div>
+            </div>
+
+            <!-- Phone -->
+            <div class="mb-3">
+              <div class="form-floating">
+                <input type="tel" class="form-control border-2 border-primary" id="c_phone" name="c_phone"
+                  placeholder="Phone Number" maxlength="13" required value="" {{#if
+                  session.login}}{{session.phone}}{{else}}{{data.c_phone}}{{/if}}"">
+                <label for="c_phone">Phone Number*</label>
+                {{#if errorMessage.c_phone}}<p class="text-danger">{{errorMessage.c_phone}}</p>{{/if}}
+              </div>
+            </div>
+
+            <!-- Payment -->
+            <div class="mb-4">
+              <label class="text-black"><strong>Payment Method*</strong></label>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="payment_method" id="cod" value="cash_on_delivery"
+                  checked required>
+                <label class="form-check-label" for="cod"><i class="fas fa-money-bill-wave me-2"></i>Cash on Delivery
+                  (COD)</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="payment_method" id="card" value="card">
+                <label class="form-check-label text-muted" for="card"><i
+                    class="fas fa-credit-card me-2"></i>Credit/Debit Card</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="payment_method" id="upi" value="upi">
+                <label class="form-check-label text-muted" for="upi"><i class="fas fa-mobile-alt me-2"></i>UPI
+                  Payment</label>
+              </div>
+            </div>
+
+            <!-- Create Account (Only show if not logged in) -->
+            {{#unless session.login}}
+            <div class="mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="c_create_account" name="createAccount">
+                <label class="form-check-label" for="c_create_account">Create an account?</label>
+              </div>
+              <div id="create_an_account" class="mt-2" style="display:none;">
+                <div class="form-floating">
+                  <input type="password" id="c_account_password" name="accountPassword"
+                    class="form-control border-2 border-primary" placeholder="Password">
+                  <label for="c_account_password">Account Password</label>
+                </div>
+              </div>
+            </div>
+            {{/unless}}
+
+            <!-- Ship to Different -->
+            <div class="mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="c_ship_different_address">
+                <label class="form-check-label" for="c_ship_different_address">Ship to a different address?</label>
+              </div>
+              <div id="ship_different_address" class="mt-2" style="display:none;">
+                <div class="form-floating mb-3">
+                  <input type="text" id="c_diff_address" name="c_diff_address"
+                    class="form-control border-2 border-primary" placeholder="Address">
+                  <label for="c_diff_address">Shipping Address*</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <input type="text" name="c_diff_address2" class="form-control border-2 border-primary"
+                    placeholder="Apartment, etc.">
+                  <label>Apartment, Suite (Optional)</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Order Notes -->
+            <div class="mb-3">
+              <div class="form-floating">
+                <textarea name="c_order_notes" id="c_order_notes" class="form-control border-2 border-primary"
+                  placeholder="Order Notes" style="height:100px;">{{data.c_order_notes}}</textarea>
+                <label for="c_order_notes">Order Notes (optional)</label>
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+      <!-- Order Summary & Coupon -->
+      <div class="col-md-6">
+
+        <!-- Coupon -->
+        <div class="row mb-5">
+          <div class="col-md-12">
+            <h2 class="h3 mb-3 text-primary">Coupon Code</h2>
+            <div class="p-3 p-lg-5 border">
+              <label for="c_code" class="text-black mb-3">Enter your coupon code</label>
+              <div class="input-group mb-2">
+                <input type="text" class="form-control" id="c_code" name="coupon_code" placeholder="Enter coupon code"
+                  value="{{couponCode}}">
+                <button class="btn btn-primary" type="button" id="applyCoupon">Apply</button>
+                <button class="btn btn-outline-danger" type="button" id="removeCoupon"
+                  style="display: none;">Remove</button>
+              </div>
+              <div id="couponMessage" class="small mt-2"></div>
+              <small class="text-muted">Available coupons: <strong>ADVANCE5</strong> (5% off), <strong>FLAT50</strong>
+                (₹50 off), <strong>FREESHIP</strong> (Free shipping)</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Your Order -->
+        <div class="row mb-5">
+          <div class="col-md-12">
+            <h2 class="h3 mb-3 text-primary">Your Order</h2>
+            <div class="p-3 p-lg-5 border">
+              {{#if cart}}
+              <table class="table site-block-order-table mb-4">
+                <thead class="thead-light">
+                  <tr>
+                    <th>Product</th>
+                    <th class="text-end">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each cart}}
+                  <tr>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <img src="/{{pic}}" alt="{{name}}" class="me-2"
+                          style="width:40px;height:40px;object-fit:cover;">
+                        <div>
+                          <div class="fw-bold">{{name}}</div><small class="text-muted">Qty: {{quantity}}</small>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="text-end">{{formatPrice (multiply price quantity)}}</td>
+                  </tr>
+                  {{/each}}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td class="fw-bold">Cart Subtotal</td>
+                    <td class="text-end fw-bold" id="subtotalCell">{{formatPrice originalSubtotal}}</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-bold">Discount</td>
+                    <td class="text-end text-success fw-bold" id="discountCell">
+                      {{#if discount}}- {{formatPrice discount}}{{else}}₹0.00{{/if}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="fw-bold">Shipping</td>
+                    <td class="text-end fw-bold" id="shippingCell">
+                      {{#gt subtotal 1200}}FREE{{else}}₹100{{/gt}}
+                    </td>
+                  </tr>
+                  <tr class="table-active">
+                    <td class="fw-bold fs-5">Total Amount</td>
+                    <td class="text-end fw-bold fs-5 text-primary" id="totalCell">
+                      {{formatPrice (subtract (add subtotal (gt subtotal 1200 0 100)) discount)}}
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+
+              <!-- COD Instructions -->
+              <div class="alert alert-info">
+                <h6 class="alert-heading mb-2"><i class="fas fa-info-circle"></i> Cash on Delivery Instructions</h6>
+                <ul class="mb-0 small">
+                  <li>Pay with cash when your order is delivered</li>
+                  <li>Please keep exact amount ready for delivery executive</li>
+                  <li>Our team will contact you for order confirmation</li>
+                </ul>
+              </div>
+
+              <!-- Place Order -->
+              <button class="btn btn-primary btn-lg w-100" type="button" form="checkoutForm" id="placeOrderBtn">
+                <i class="fas fa-shopping-bag me-2"></i>Place Order
+              </button>
+
+              {{else}}
+              <div class="text-center py-4">
+                <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                <p class="text-muted">Your cart is empty</p>
+                <a href="/service" class="btn btn-primary">Continue Shopping</a>
+              </div>
+              {{/if}}
+            </div>
+          </div>
+        </div>
+
+        <!-- Security Features -->
+        <div class="row">
+          <div class="col-md-12">
+            <div class="text-center">
+              <div class="d-flex justify-content-center gap-4 text-muted small mb-3">
+                <div><i class="fas fa-shield-alt text-success me-1"></i>Secure Checkout</div>
+                <div><i class="fas fa-lock text-success me-1"></i>Privacy Protected</div>
+                <div><i class="fas fa-truck text-success me-1"></i>Free Delivery</div>
+              </div>
+              <div class="small text-muted"><i class="fas fa-clock me-1"></i>Orders processed within 24 hours</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{{>footer}}
+
+<!-- JS -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // --- Auto-fill customer data if logged in ---
+    const isLoggedIn = {{#if session.login}}true{{else}}false{{/if}};
+
+function autoFillCustomerData() {
+
+    if (isLoggedIn) {
+      console.log('Customer is logged in, auto-filling data...');
+
+      // Auto-fill name fields from session data
+      const firstName = '{{session.firstName}}';
+      const lastName = '{{session.lastName}}';
+      const email = '{{session.email}}';
+      const phone = '{{session.phone}}';
+
+      if (firstName && document.getElementById('c_fname')) {
+        document.getElementById('c_fname').value = firstName;
+      }
+      if (lastName && document.getElementById('c_lname')) {
+        document.getElementById('c_lname').value = lastName;
+      }
+      if (email && document.getElementById('c_email')) {
+        document.getElementById('c_email').value = email;
+      }
+      if (phone && document.getElementById('c_phone')) {
+        document.getElementById('c_phone').value = phone;
+      }
+    }
+  }
+
+    // --- Toggle Sections ---
+  const createAccountCheckbox = document.getElementById('c_create_account');
+  const createAccountSection = document.getElementById('create_an_account');
+  const shipDifferentCheckbox = document.getElementById('c_ship_different_address');
+  const shipDifferentSection = document.getElementById('ship_different_address');
+
+  // Hide create account section if user is logged in
+  // const isLoggedIn = {{#if session.login}}true{{else}}false{{/if}};
+  if (isLoggedIn && createAccountSection) {
+    createAccountSection.style.display = 'none';
+    if (createAccountCheckbox) {
+      createAccountCheckbox.style.display = 'none';
+      createAccountCheckbox.parentElement.style.display = 'none';
+    }
+  } else if (createAccountSection) {
+    createAccountSection.style.display = 'none';
+  }
+
+  if (shipDifferentSection) {
+    shipDifferentSection.style.display = 'none';
+  }
+
+  if (createAccountCheckbox && !isLoggedIn) {
+    createAccountCheckbox.addEventListener('change', () =>
+      createAccountSection.style.display = createAccountCheckbox.checked ? 'block' : 'none'
+    );
+  }
+
+  if (shipDifferentCheckbox) {
+    shipDifferentCheckbox.addEventListener('change', () =>
+      shipDifferentSection.style.display = shipDifferentCheckbox.checked ? 'block' : 'none'
+    );
+  }
+
+  // --- Core Checkout Data ---
+  const form = document.getElementById('checkoutForm');
+  const placeOrderBtn = document.getElementById('placeOrderBtn');
+
+  let cartItems = Number('{{cartCount}}') || 0;
+  let subtotal = Number('{{originalSubtotal}}') || 0;
+  let currentDiscount = Number('{{discount}}') || 0;
+  let currentCouponCode = '{{couponCode}}' || '';
+  let shipping = subtotal > 1200 ? 0 : 100;
+
+  // --- Table Elements ---
+  const subtotalCell = document.getElementById('subtotalCell');
+  const discountCell = document.getElementById('discountCell');
+  const shippingCell = document.getElementById('shippingCell');
+  const totalCell = document.getElementById('totalCell');
+
+  // --- Coupon Elements ---
+  const applyCouponBtn = document.getElementById('applyCoupon');
+  const removeCouponBtn = document.getElementById('removeCoupon');
+  const couponCodeInput = document.getElementById('c_code');
+  const couponMessage = document.getElementById('couponMessage');
+
+  // Initialize coupon input with current coupon code
+  if (currentCouponCode) {
+    couponCodeInput.value = currentCouponCode;
+    couponCodeInput.disabled = true;
+    applyCouponBtn.style.display = 'none';
+    removeCouponBtn.style.display = 'inline-block';
+  }
+
+  // --- Initialize Table Values ---
+  function updateOrderSummary() {
+    const finalTotal = subtotal - currentDiscount + shipping;
+
+    if (subtotalCell) subtotalCell.textContent = `₹${subtotal.toFixed(2)}`;
+    if (discountCell) {
+      discountCell.textContent = currentDiscount > 0 ? `- ₹${currentDiscount.toFixed(2)}` : '₹0.00';
+      discountCell.className = currentDiscount > 0 ? 'text-end text-success fw-bold' : 'text-end fw-bold';
+    }
+    if (shippingCell) shippingCell.textContent = shipping === 0 ? 'FREE' : `₹${shipping}`;
+    if (totalCell) totalCell.textContent = `₹${finalTotal.toFixed(2)}`;
+  }
+
+  updateOrderSummary();
+
+  // --- Apply Coupon Logic ---
+  applyCouponBtn?.addEventListener('click', async function () {
+    const code = couponCodeInput.value.trim();
+
+    if (!code) {
+      showCouponMessage('Please enter a coupon code', 'error');
+      return;
+    }
+
+    try {
+      const response = await fetch('/apply-coupon', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ couponCode: code })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        currentDiscount = result.discount;
+        currentCouponCode = result.couponCode;
+
+        showCouponMessage(result.message, 'success');
+        couponCodeInput.value = result.couponCode;
+        couponCodeInput.disabled = true;
+        applyCouponBtn.style.display = 'none';
+        removeCouponBtn.style.display = 'inline-block';
+
+        updateOrderSummary();
+      } else {
+        showCouponMessage(result.message, 'error');
+        currentDiscount = 0;
+        currentCouponCode = '';
+        updateOrderSummary();
+      }
+    } catch (error) {
+      showCouponMessage('Error applying coupon', 'error');
+      console.error('Coupon error:', error);
+    }
+  });
+
+  // --- Remove Coupon Logic ---
+  removeCouponBtn?.addEventListener('click', async function () {
+    try {
+      const response = await fetch('/remove-coupon', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        currentDiscount = 0;
+        currentCouponCode = '';
+
+        showCouponMessage(result.message, 'success');
+        couponCodeInput.value = '';
+        couponCodeInput.disabled = false;
+        applyCouponBtn.style.display = 'inline-block';
+        removeCouponBtn.style.display = 'none';
+
+        updateOrderSummary();
+      } else {
+        showCouponMessage(result.message, 'error');
+      }
+    } catch (error) {
+      showCouponMessage('Error removing coupon', 'error');
+      console.error('Remove coupon error:', error);
+    }
+  });
+
+  function showCouponMessage(message, type) {
+    couponMessage.innerHTML = `<span class="text-${type === 'success' ? 'success' : 'danger'}">${message}</span>`;
+    couponMessage.style.display = 'block';
+
+    setTimeout(() => {
+      if (type === 'success') {
+        couponMessage.style.display = 'none';
+      }
+    }, 5000);
+  }
+  // Auto-fill customer data
+  autoFillCustomerData();
+
+});
+
+</script>
+
+<script src="https://www.google.com/recaptcha/api.js?render=6LcmCQ4tAAAAAEFDRP4OBVuOIptLKJkUUmKpBtmL"></script>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
+<script>
+  document.getElementById("placeOrderBtn").addEventListener("click", async function () {
+
+    const form = document.getElementById("checkoutForm");
+    const btn = document.getElementById("placeOrderBtn");
+
+    // 🔒 Prevent multiple clicks
+    btn.disabled = true;
+    btn.innerHTML = "Processing...";
+
+    // ================= VALIDATION =================
+    let isValid = true;
+    let firstInvalid = null;
+
+    // Phone Validation
+      const phoneField = document.getElementById("c_phone");
+
+      if (!phoneField.value.trim()) {
+        showError("Phone number is required");
+
+        btn.disabled = false;
+        btn.innerHTML =
+          '<i class="fas fa-shopping-bag me-2"></i>Place Order';
+
+        return;
+      }
+
+      const phoneRegex = /^(?:\+91|91)?[6-9]\d{9}$/;
+
+      if (!phoneRegex.test(phoneField.value.trim())) {
+
+        phoneField.classList.add("is-invalid");
+
+        showError("Please enter a valid mobile number");
+
+        btn.disabled = false;
+        btn.innerHTML =
+          '<i class="fas fa-shopping-bag me-2"></i>Place Order';
+
+        return;
+      }
+
+    form.querySelectorAll("[required]").forEach(field => {
+      const errorMsg = field.parentElement.querySelector(".invalid-feedback");
+
+      if (!field.value.trim()) {
+        field.classList.add("is-invalid");
+        isValid = false;
+
+        if (!firstInvalid) firstInvalid = field;
+
+        if (!errorMsg) {
+          const msg = document.createElement("div");
+          msg.className = "invalid-feedback";
+          msg.innerText = "This field is required";
+          field.parentElement.appendChild(msg);
+        }
+      } else {
+        field.classList.remove("is-invalid");
+        if (errorMsg) errorMsg.remove();
+      }
+    });
+
+    if (!isValid) {
+      btn.disabled = false;
+      btn.innerHTML = "Place Order";
+
+      firstInvalid.scrollIntoView({ behavior: "smooth", block: "center" });
+      firstInvalid.focus();
+      return;
+    }
+
+    const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+
+    // ================= COD =================
+    if (paymentMethod === "cash_on_delivery") {
+
+      const token = await grecaptcha.execute(
+        "6LcmCQ4tAAAAAEFDRP4OBVuOIptLKJkUUmKpBtmL",
+        { action: "checkout" }
+      );
+
+      document.getElementById("checkoutRecaptchaToken").value = token;
+
+      form.submit();
+      return;
+    }
+
+    // ================= ONLINE =================
+    try {
+
+      const totalAmount = parseFloat(
+        document.getElementById("totalCell")
+          .innerText.replace(/[^0-9.]/g, "") // ✅ FIXED
+      );
+
+      const res = await fetch("/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: totalAmount })
+      });
+
+      const data = await res.json();
+
+      const options = {
+        key: "{{razorpayKey}}",
+        amount: data.order.amount,
+        currency: "INR",
+        order_id: data.order.id,
+
+        name: "Advance Pharma Pathic Pharmaceuticals Limited",
+        description: "Order Payment",
+
+        // ✅ Prefill (important)
+        prefill: {
+          name:
+            document.querySelector('[name="c_fname"]').value +
+            " " +
+            document.querySelector('[name="c_lname"]').value,
+
+          email: document.querySelector('[name="c_email"]').value,
+
+          contact: document.querySelector('[name="c_phone"]').value
+        },
+
+        theme: {
+          color: "#00d084"
+        },
+
+        handler: async function (response) {
+
+          const token = await grecaptcha.execute(
+            "6LcmCQ4tAAAAAEFDRP4OBVuOIptLKJkUUmKpBtmL",
+            { action: "checkout" }
+          );
+
+          document.getElementById("checkoutRecaptchaToken").value = token;
+
+          const input = document.createElement("input");
+          input.type = "hidden";
+          input.name = "razorpay_payment_id";
+          input.value = response.razorpay_payment_id;
+
+          form.appendChild(input);
+
+          form.submit();
+        }
+      };
+
+      const rzp = new Razorpay(options);
+
+      // ❌ REMOVE ALERT → ✅ SHOW NICE MESSAGE
+      rzp.on("payment.failed", function () {
+
+        showError("Payment failed. Please try again.");
+
+        btn.disabled = false;
+        btn.innerHTML = "Place Order";
+      });
+
+      rzp.open();
+
+    } catch (err) {
+      console.log(err);
+
+      showError("Server error. Try again later.");
+
+      btn.disabled = false;
+      btn.innerHTML = "Place Order";
+    }
+  });
+
+
+  // ✅ CUSTOM ERROR MESSAGE (NO ALERT)
+  function showError(message) {
+    let box = document.getElementById("paymentError");
+
+    if (!box) {
+      box = document.createElement("div");
+      box.id = "paymentError";
+      box.className = "alert alert-danger mt-3";
+      document.getElementById("checkoutForm").prepend(box);
+    }
+
+    box.innerText = message;
+  }
+</script>
+
+<style>
+  .is-invalid {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, .25);
+  }
+
+  .invalid-feedback {
+    color: #dc3545;
+    font-size: 13px;
+    margin-top: 5px;
+  }
+</style>

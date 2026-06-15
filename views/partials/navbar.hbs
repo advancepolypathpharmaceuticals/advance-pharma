@@ -1,0 +1,202 @@
+</head>
+
+<body>
+
+  <!-- Spinner Start -->
+  <div id="spinner" class="show">
+    <div class="modern-loader">
+      <div class="ring"></div>
+      <p class="loading-text">Loading</p>
+    </div>
+  </div>
+  <!-- Spinner End -->
+
+  <!-- Topbar Start -->
+  <div class="container-fluid topbar bg-light px-3 py-2">
+    <div class="row gx-0 align-items-center">
+
+      <!-- Left Section: Contact Info -->
+      <div class="col-lg-8 text-center text-lg-start mb-2 mb-lg-0">
+        <div class="row gx-2 gy-1 justify-content-center justify-content-lg-start">
+
+          <!-- Location -->
+          <div class="col-auto">
+            <a href="https://www.google.com/maps?ll=25.615869,85.048858&z=17&t=m&hl=en&gl=IN&mapclient=embed&cid=929641577394948232"
+              class="text-muted small d-flex align-items-center">
+              <i class="fas fa-map-marker-alt text-primary me-2"></i>Find Ours Location
+            </a>
+          </div>
+
+          <!-- Phone -->
+          <div class="col-auto">
+            <a href="tel:9199893278,7677413112" class="text-muted small d-flex align-items-center">
+              <i class="fa-solid fa-phone-volume text-primary me-2"></i>9199893278, 7677413112
+            </a>
+          </div>
+
+          <!-- WhatsApp -->
+          <div class="col-auto">
+            <a href="https://wa.me/9199893278" target="_blank" class="text-muted small d-flex align-items-center">
+              <i class="fa-brands fa-whatsapp text-success me-2"></i>9199893278
+            </a>
+          </div>
+
+          <!-- Email -->
+          <div class="col-12 col-sm-auto">
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=advancepolypathpharmaceuticals@gmail.com"
+              class="text-muted small d-flex align-items-center text-break">
+              <i class="fas fa-envelope text-primary me-2"></i>advancepolypathpharmaceuticals@gmail.com
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Topbar End -->
+
+  <!-- Navbar & Hero Start -->
+  <div class="container-fluid position-relative p-0">
+    <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
+      <a href="/" class="navbar-brand p-0">
+        <img src="/img/Logo.jpg" alt="Logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="fa fa-bars"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto py-0">
+          <a href="/" class="nav-item nav-link {{isActive '/'}}"><i class="fa fa-home me-1"></i>Home</a>
+          <a href="/about" class="nav-item nav-link {{isActive '/about'}}"><i
+              class="fa fa-info-circle me-1"></i>About</a>
+          <a href="/all-products" class="nav-item nav-link {{isActive '/all-products'}}"><i
+              class="fa fa-box-open me-1"></i>Products</a>
+          <div class="nav-item dropdown">
+            <a href="#" class="nav-link" data-bs-toggle="dropdown">
+              <i class="fa fa-layer-group me-1"></i>
+              <span class="dropdown-toggle">Pages</span>
+            </a>
+            <div class="dropdown-menu m-0">
+              <a href="/feature" class="dropdown-item {{isActive '/feature'}}"><i class="fa fa-star me-2"></i>Our
+                Features</a>
+              <a href="/team" class="dropdown-item {{isActive '/team'}}"><i class="fa fa-users me-2"></i>Our team</a>
+              <a href="/testimonial" class="dropdown-item {{isActive '/testimonial'}}"><i
+                  class="fa fa-comments me-2"></i>Testimonial</a>
+              <a href="/offer" class="dropdown-item {{isActive '/offer'}}"><i class="fa fa-tags me-2"></i>Our offer</a>
+              <a href="/faq" class="dropdown-item {{isActive '/faq'}}"><i class="fa fa-question-circle me-2"></i>Faq</a>
+              <a href="/career" class="dropdown-item {{isActive '/career'}}"><i
+                  class="fa fa-briefcase me-2"></i>Career</a>
+            </div>
+          </div>
+          <a href="/contact" class="nav-item nav-link {{isActive '/contact'}}"><i
+              class="fa fa-envelope me-1"></i>Contact</a>
+          <a href="/cart" class="nav-item nav-link {{isActive '/cart'}}">
+            <i class="fa fa-shopping-cart me-1"></i> Cart
+            {{#if cartCount}}
+            <span id="cart-count" class="badge bg-danger rounded-pill ms-2">
+              {{cartCount}}
+            </span>
+            {{/if}}
+          </a>
+
+        </div>
+
+        {{#if session.login}}
+        <!-- When logged in, show user name as dropdown -->
+        <div class="dropdown">
+          <button class="btn btn-primary rounded-pill py-2 px-4 my-3 my-lg-0 flex-shrink-0 dropdown-toggle"
+            type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-user-circle me-2"></i>
+
+            <!-- FIXED: Handle all possible name scenarios -->
+            {{#if session.name}}
+            {{session.name}}
+            {{else if session.firstName}}
+            {{#if session.lastName}}
+            {{session.firstName}} {{session.lastName}}
+            {{else}}
+            {{session.firstName}}
+            {{/if}}
+            {{else if session.username}}
+            {{session.username}}
+            {{else if session.email}}
+            {{session.email}}
+            {{else}}
+            My Account
+            {{/if}}
+
+            {{#if (eq session.role 'Customer')}}
+            <span class="badge bg-light text-dark ms-1">Customer</span>
+            {{else}}
+            <span class="badge bg-warning text-dark ms-1">{{session.role}}</span>
+            {{/if}}
+          </button>
+
+          {{#if (eq session.role 'Customer')}}
+          <!-- CUSTOMER DROPDOWN MENU -->
+          <div class="dropdown-menu dropdown-menu-end rounded shadow-sm mt-2">
+            <a href="/customer" class="dropdown-item">
+              <i class="fas fa-tachometer-alt me-2"></i>My Dashboard
+            </a>
+            <a href="/customer/orders" class="dropdown-item">
+              <i class="fas fa-shopping-bag me-2"></i>My Orders
+            </a>
+            <a href="/customer/profile" class="dropdown-item">
+              <i class="fas fa-user me-2"></i>My Profile
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="/service" class="dropdown-item">
+              <i class="fas fa-store me-2"></i>Continue Shopping
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="/logout" class="dropdown-item text-danger">
+              <i class="fas fa-power-off me-2"></i>Log Out
+            </a>
+          </div>
+          {{else}}
+          <!-- ADMIN DROPDOWN MENU -->
+          <div class="dropdown-menu dropdown-menu-end rounded shadow-sm mt-2">
+            <a href="/admin" class="dropdown-item">
+              <i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard
+            </a>
+            <a href="/admin/contact-us" class="dropdown-item">
+              <i class="fas fa-comment-alt me-2"></i>Contact Inbox
+            </a>
+            <a href="/admin/career" class="dropdown-item">
+              <i class="fas fa-briefcase me-2"></i>Career Applications
+            </a>
+            <a href="/admin/order" class="dropdown-item">
+              <i class="fas fa-shopping-cart me-2"></i>Manage Orders
+            </a>
+            {{#if (isSuperAdmin session)}}
+            <a href="/admin/user" class="dropdown-item">
+              <i class="fas fa-users me-2"></i>Manage Users
+            </a>
+            {{/if}}
+            <div class="dropdown-divider"></div>
+            <a href="/admin/user/edit/{{session.userid}}" class="dropdown-item">
+              <i class="fas fa-cog me-2"></i>Account Settings
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="/logout" class="dropdown-item text-danger">
+              <i class="fas fa-power-off me-2"></i>Log Out
+            </a>
+          </div>
+          {{/if}}
+        </div>
+        {{else}}
+        <!-- When not logged in, show login button -->
+        <a href="/login" class="btn btn-primary rounded-pill py-2 px-4 my-3 my-lg-0 flex-shrink-0">
+          <i class="fas fa-sign-in-alt me-2"></i>Login
+        </a>
+        {{/if}}
+
+
+    </nav>
+
+<script>
+  window.addEventListener("load", function () {
+    document.getElementById("spinner")?.classList.remove("show");
+  });
+</script>

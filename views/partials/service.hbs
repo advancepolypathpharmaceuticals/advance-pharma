@@ -1,0 +1,42 @@
+<!-- Services Start -->
+<div class="container-fluid service pb-5">
+    <div class="container pb-5">
+        <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.2s" style="max-width: 800px;">
+            <h4 class="text-primary">Our Products</h4>
+            <h1 class="display-5 mb-4">Trusted Pharmaceutical Solutions for Better Health</h1>
+            <p class="mb-0">
+                We are committed to delivering safe, effective, and affordable medicines
+                that improve the quality of life for patients. Our product range includes
+                high-quality formulations, developed with precision and care, ensuring
+                reliability and trust for healthcare professionals and customers alike.
+            </p>
+        </div>
+
+        <!-- Owl Carousel Wrapper -->
+        <div class="owl-carousel owl-theme">
+            {{#each services}}
+            <div class="item">
+                <div class="service-item product-card">
+                    <a href="/service/{{_id}}" class="service-img d-inline-block overflow-hidden rounded-3 shadow-sm">
+                        <img src="/{{pic}}" alt="Product Image" class="product-img img-fluid"
+                            style="transition: transform 0.3s ease;">
+                    </a>
+                    <div class="rounded-bottom p-4 text-center">
+                        <a href="/service/{{_id}}" class="h4 d-inline-block mb-4 service-title">{{name}}</a>
+                        <strong class="mb-4 product-desc">{{shortDescription}}</strong>
+                        <p class="mb-4 text-primary">{{formatPrice price}}</p>
+                        <a class="btn btn-primary rounded-pill py-2 px-4" href="/service/{{_id}}">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        <!-- End Owl Carousel -->
+
+        <!-- Show More Button -->
+        <div class="text-center mt-4">
+            <a href="/all-products" class="btn btn-outline-primary rounded-pill px-4 py-2">Show More</a>
+        </div>
+    </div>
+</div>
+<!-- Services End -->

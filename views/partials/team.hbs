@@ -1,0 +1,43 @@
+<!-- Team Start -->
+<div class="container-fluid team pb-5">
+    <div class="container pb-5">
+        <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.2s" style="max-width: 800px;">
+            <h4 class="text-primary">Our Team</h4>
+            <h1 class="display-5 mb-4">Meet Our Advisers</h1>
+            <p class="mb-0">
+                We are proud to have a team of skilled professionals and advisors
+                who guide our mission and help us achieve excellence every day.
+            </p>
+        </div>
+        <div class="row g-4 justify-content-center">
+            {{#each teams}}
+            <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.2s">
+                <div class="team-item text-center">
+                    <div class="team-img">
+                        <img src="{{pic}}" class="img-fluid" alt="{{name}}">
+                    </div>
+                    <div class="team-title">
+                        <h4 class="mb-0">{{name}}</h4>
+                        <p class="mb-0">{{designation}}</p>
+                    </div>
+                    <div class="team-icon">
+                        <a class="btn btn-primary btn-sm-square rounded-circle me-3" href="{{facebook}}">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a class="btn btn-primary btn-sm-square rounded-circle me-3" href="{{twitter}}">
+                            <i class="fab fa-x-twitter"></i>
+                        </a>
+                        <a class="btn btn-primary btn-sm-square rounded-circle me-3" href="{{linkedin}}">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a class="btn btn-primary btn-sm-square rounded-circle me-0" href="{{instagram}}">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</div>
+<!-- Team End -->

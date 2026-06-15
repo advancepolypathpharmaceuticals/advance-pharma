@@ -1,0 +1,231 @@
+{{>header}}
+<title>Admin Dashboard | Order Details</title>
+{{>navbar}}
+{{>hero}}
+
+<div class="container-fluid my-3">
+  <div class="row">
+    <div class="col-md-3 my-3">
+      {{>sidebar}}
+    </div>
+    <div class="col-md-9 my-3">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="bg-primary text-center p-2 text-light flex-grow-1 me-3">Order Details - {{order.orderNumber}}</h5>
+        <a href="/admin/order" class="btn btn-outline-secondary btn-sm">
+          <i class="fas fa-arrow-left"></i> Back to Orders
+        </a>
+      </div>
+
+      <div class="row">
+        <!-- Order Summary -->
+        <div class="col-md-6 mb-4">
+          <div class="card">
+            <div class="card-header bg-light">
+              <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Order Information</h6>
+            </div>
+            <div class="card-body">
+              <table class="table table-sm table-borderless">
+                <tr>
+                  <td><strong>Order Number:</strong></td>
+                  <td>{{order.orderNumber}}</td>
+                </tr>
+                <tr>
+                  <td><strong>Order Date:</strong></td>
+                  <td>{{dateHelper order.createdAt}}</td>
+                </tr>
+                <tr>
+                  <td><strong>Status:</strong></td>
+                  <td>
+                    <span class="badge bg-{{getStatusColor order.status}}">
+                      <i class="fas fa-{{getStatusIcon order.status}} me-1"></i>
+                      {{capitalize order.status}}
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Payment Method:</strong></td>
+                  <td>{{capitalize order.paymentMethod}}</td>
+                </tr>
+                <tr>
+                  <td><strong>Payment Status:</strong></td>
+                  <td>
+                    <span class="badge bg-{{getPaymentStatusColor order.paymentStatus}}">
+                      <i class="fas fa-{{getPaymentStatusIcon order.paymentStatus}} me-1"></i>
+                      {{capitalize order.paymentStatus}}
+                    </span>
+                  </td>
+                </tr>
+                {{#if order.discount}}
+                <tr>
+                  <td><strong>Coupon Discount:</strong></td>
+                  <td class="text-success">- {{formatPrice order.discount}}</td>
+                </tr>
+                {{/if}}
+                <tr>
+                  <td><strong>Total Amount:</strong></td>
+                  <td class="h5 text-dark">{{formatPrice order.total}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Customer Information -->
+        <div class="col-md-6 mb-4">
+          <div class="card">
+            <div class="card-header bg-light">
+              <h6 class="mb-0"><i class="fas fa-user me-2"></i>Customer & Shipping Information</h6>
+            </div>
+            <div class="card-body">
+              <table class="table table-sm table-borderless">
+                <tr>
+                  <td><strong>Customer Name:</strong></td>
+                  <td>{{order.customer.firstName}} {{order.customer.lastName}}</td>
+                </tr>
+                <tr>
+                  <td><strong>Email:</strong></td>
+                  <td>{{order.customer.email}}</td>
+                </tr>
+                <tr>
+                  <td><strong>Phone:</strong></td>
+                  <td>{{order.customer.phone}}</td>
+                </tr>
+                <tr>
+                  <td><strong>Shipping Address:</strong></td>
+                  <td>
+                    {{order.shippingAddress.firstName}} {{order.shippingAddress.lastName}}<br>
+                    {{#if order.shippingAddress.company}}
+                    {{order.shippingAddress.company}}<br>
+                    {{/if}}
+                    {{order.shippingAddress.address}}<br>
+                    {{#if order.shippingAddress.address2}}
+                    {{order.shippingAddress.address2}}<br>
+                    {{/if}}
+                    {{order.shippingAddress.city}}, {{order.shippingAddress.state}} -
+                    {{order.shippingAddress.zipCode}}
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <!-- Order Items -->
+        <div class="card mb-4">
+          <div class="card-header bg-light">
+            <h6 class="mb-0"><i class="fas fa-shopping-bag me-2"></i>Order Items ({{order.items.length}})</h6>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead class="table-light">
+                  <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each order.items}}
+                  <tr>
+                    <td>{{this.name}}</td>
+                    <td>{{formatPrice this.price}}</td>
+                    <td>{{this.quantity}}</td>
+                    <td>{{formatPrice this.total}}</td>
+                  </tr>
+                  {{/each}}
+
+                  <!-- Order Calculation Breakdown -->
+                  <tr class="table-light">
+                    <td colspan="3" class="text-end"><strong>Items Subtotal:</strong></td>
+                    <td><strong>{{formatPrice order.subtotal}}</strong></td>
+                  </tr>
+
+                  {{#if order.discount}}
+                  <tr class="table-light">
+                    <td colspan="3" class="text-end"><strong class="text-success">Coupon Discount:</strong></td>
+                    <td><strong class="text-success">- {{formatPrice order.discount}}</strong></td>
+                  </tr>
+
+                  <tr class="table-light">
+                    <td colspan="3" class="text-end"><strong>After Discount:</strong></td>
+                    <td><strong>{{formatPrice (subtract order.subtotal order.discount)}}</strong></td>
+                  </tr>
+                  {{/if}}
+
+                  <tr class="table-light">
+                    <td colspan="3" class="text-end"><strong>Shipping Charge:</strong></td>
+                    <td>
+                      <strong>
+                        {{#if (eq order.shipping 0)}}
+                        <span class="text-success">FREE</span>
+                        {{else}}
+                        {{formatPrice order.shipping}}
+                        {{/if}}
+                      </strong>
+                    </td>
+                  </tr>
+
+                  <tr class="table-primary">
+                    <td colspan="3" class="text-end"><strong>Grand Total:</strong></td>
+                    <td><strong class="h5">{{formatPrice order.total}}</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shipping Rule Information -->
+        <div class="card mb-4">
+          <div class="card-header bg-light">
+            <h6 class="mb-0"><i class="fas fa-shipping-fast me-2"></i>Shipping Information</h6>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <p class="mb-2"><strong>Shipping Rule Applied:</strong></p>
+                <ul class="list-unstyled small">
+                  <li><i class="fas fa-check text-success me-2"></i>Orders above ₹1200: <strong
+                      class="text-success">FREE Shipping</strong></li>
+                  <li><i class="fas fa-check text-success me-2"></i>Orders below ₹1200: <strong>₹100 Shipping
+                      Charge</strong></li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <p class="mb-2"><strong>Applied to this order:</strong></p>
+                <p class="mb-0">
+                  Items Subtotal: <strong>{{formatPrice order.subtotal}}</strong>
+                  {{#if order.discount}}
+                  <br>After Discount: <strong>{{formatPrice (subtract order.subtotal order.discount)}}</strong>
+                  {{/if}}
+                  <br>Shipping:
+                  <strong>
+                    {{#if (eq order.shipping 0)}}
+                    <span class="text-success">FREE (Order value ≥ ₹1200)</span>
+                    {{else}}
+                    ₹100 (Order value < ₹1200) {{/if}} </strong>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Notes -->
+        {{#if order.orderNotes}}
+        <div class="card">
+          <div class="card-header bg-light">
+            <h6 class="mb-0"><i class="fas fa-sticky-note me-2"></i>Order Notes</h6>
+          </div>
+          <div class="card-body">
+            <p class="mb-0">{{order.orderNotes}}</p>
+          </div>
+        </div>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+
+  {{>footer}}

@@ -1,0 +1,169 @@
+{{>header}}
+<title>My Account - Customer Dashboard</title>
+{{>navbar}}
+{{>hero}}
+<div class="site-section my-5">
+  <div class="container">
+    <div class="row">
+      <!-- Sidebar with Profile Picture -->
+      <div class="col-md-3 mb-4">
+        <!-- Profile Picture in Sidebar -->
+        <div class="card text-center mb-4">
+          <div class="card-body">
+            <div class="profile-pic-container mx-auto mb-3">
+              <img src="{{#if customer.pic}}/uploads/user/{{customer.pic}}{{else}}/img/default-profile.png{{/if}}" 
+                   class="rounded-circle border" 
+                   style="width: 100px; height: 100px; object-fit: cover;"
+                   alt="Profile Picture">
+            </div>
+            <h6 class="card-title mb-1">{{customer.firstName}} {{customer.lastName}}</h6>
+            <small class="text-muted">Customer</small>
+          </div>
+        </div>
+
+        <div class="list-group">
+          <a href="/customer" class="list-group-item list-group-item-action {{isActive '/customer'}}">
+            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+          </a>
+          <a href="/customer/orders" class="list-group-item list-group-item-action">
+            <i class="fas fa-shopping-bag me-2"></i>Order History
+          </a>
+          <a href="/customer/profile" class="list-group-item list-group-item-action">
+            <i class="fas fa-user me-2"></i>My Profile
+          </a>
+          <a href="/logout" class="list-group-item list-group-item-action text-danger">
+            <i class="fas fa-sign-out-alt me-2"></i>Logout
+          </a>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="col-md-9">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="text-primary">Welcome, {{customer.firstName}} {{customer.lastName}}!</h2>
+          <a href="/service" class="btn btn-primary">
+            <i class="fas fa-shopping-bag me-2"></i>Continue Shopping
+          </a>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="row mb-4">
+          <div class="col-md-4">
+            <div class="card bg-primary text-white">
+              <div class="card-body text-center">
+                <h3>{{totalOrders}}</h3>
+                <p class="mb-0">Total Orders</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card bg-success text-white">
+              <div class="card-body text-center">
+                <h3>{{deliveredOrders}}</h3>
+                <p class="mb-0">Delivered</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card bg-warning text-white">
+              <div class="card-body text-center">
+                <h3>{{pendingOrders}}</h3>
+                <p class="mb-0">Pending</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Recent Orders</h5>
+          </div>
+          <div class="card-body">
+            {{#if recentOrders.length}}
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Order #</th>
+                      <th>Date</th>
+                      <th>Total</th>
+                      <th>Status</th>
+                      <th>Payment</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{#each recentOrders}}
+                    <tr>
+                      <td><strong>{{this.orderNumber}}</strong></td>
+                      <td>{{dateHelper this.createdAt}}</td>
+                      <td>{{formatPrice this.total}}</td>
+                      <td>
+                        <span class="badge bg-{{getStatusColor this.status}}">
+                          <i class="fas fa-{{getStatusIcon this.status}} me-1"></i>
+                          {{capitalize this.status}}
+                        </span>
+                      </td>
+                      <td>
+                        <span class="badge bg-{{getPaymentStatusColor this.paymentStatus}}">
+                          <i class="fas fa-{{getPaymentStatusIcon this.paymentStatus}} me-1"></i>
+                          {{capitalize this.paymentStatus}}
+                        </span>
+                      </td>
+                      <td>
+                        <a href="/customer/orders/{{this.orderNumber}}" class="btn btn-sm btn-outline-primary">
+                          <i class="fas fa-eye me-1"></i>View
+                        </a>
+                      </td>
+                    </tr>
+                    {{/each}}
+                  </tbody>
+                </table>
+              </div>
+              <div class="text-center mt-3">
+                <a href="/customer/orders" class="btn btn-primary">
+                  <i class="fas fa-list me-1"></i>View All Orders
+                </a>
+              </div>
+            {{else}}
+              <div class="text-center py-4">
+                <i class="fas fa-shopping-bag fa-3x text-muted mb-3"></i>
+                <p class="text-muted">You haven't placed any orders yet.</p>
+                <a href="/service" class="btn btn-primary">
+                  <i class="fas fa-shopping-bag me-2"></i>Start Shopping
+                </a>
+              </div>
+            {{/if}}
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row mt-4">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-body text-center">
+                <i class="fas fa-shopping-cart fa-2x text-primary mb-3"></i>
+                <h5>Shop Products</h5>
+                <p class="text-muted">Browse our latest products</p>
+                <a href="/service" class="btn btn-outline-primary">Go Shopping</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-body text-center">
+                <i class="fas fa-user-edit fa-2x text-success mb-3"></i>
+                <h5>Update Profile</h5>
+                <p class="text-muted">Manage your account details</p>
+                <a href="/customer/profile" class="btn btn-outline-success">Edit Profile</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{>footer}}

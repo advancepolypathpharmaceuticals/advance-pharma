@@ -1,0 +1,26 @@
+<div class="list-group">
+  <a href="/admin/" class="list-group-item list-group-item-active active" aria-current="true">
+    <i class="fa fa-home fs-4"></i><span class="float-end">Home</span>
+  </a>
+  <a href="/admin/contact-us" class="list-group-item list-group-item-active"><i class="fa fa-address-card fs-4"></i><span class="float-end">Contact Us</span></a>
+  <a href="/admin/service/" class="list-group-item list-group-item-active"><i class="fa fa-list fs-4"></i><span class="float-end">Products</span></a>
+  <a href="/admin/faq/" class="list-group-item list-group-item-active"><i class="fa fa-question fs-4"></i><span class="float-end">FAQ</span></a>
+  <a href="/admin/team/" class="list-group-item list-group-item-active"><i class="fa fa-users fs-4"></i><span class="float-end">Team Member</span></a>
+  <a href="/admin/testimonial/" class="list-group-item list-group-item-active"><i class="fa fa-star fs-4"></i><span class="float-end">Testimonials</span></a>
+  <a href="/admin/career/" class="list-group-item list-group-item-active"><i class="fa fa-briefcase fs-4"></i><span class="float-end">Career</span></a>
+  <a href="/admin/order/" class="list-group-item list-group-item-active position-relative"><i class="fa fa-shopping-cart fs-4"></i><span class="float-end">Orders 
+      {{#if orderStats}}
+        {{#if orderStats.pendingOrders}}
+          <span class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">
+            {{orderStats.pendingOrders}}
+          </span>
+        {{/if}}
+      {{/if}}
+    </span>
+  </a>
+  
+  {{#if (isSuperAdmin session)}}
+  <a href="/admin/user" class="list-group-item list-group-item-active"><i class="fa fa-user-shield fs-4"></i><span class="float-end">Admin Users</span></a>
+  <a href="/admin/user/customer" class="list-group-item list-group-item-active"><i class="fa fa-users fs-4"></i><span class="float-end">Customers</span></a>
+  {{/if}}
+</div>

@@ -1,0 +1,68 @@
+{{>header}}
+<title>Admin Dashboard | Team Member</title>
+{{>navbar}}
+
+{{>hero}}
+<div class="container-fluid my-3">
+    <div class="row">
+        <div class="col-md-3 my-3">
+            {{>sidebar}}
+        </div>
+        <div class="col-md-9 my-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="bg-primary text-center p-2 text-light flex-grow-1 me-3">Team Member</h5>
+                <a href="/admin/team/create" class="btn btn-outline-secondary btn-sm">
+                    <i class="fa fa-plus"></i> Add New Member
+                </a>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>-Id</th>
+                            <th>Member Name</th>
+                            <th>Member Picture</th>
+                            <th>Member Designation</th>
+                            <th>Facebook Link</th>
+                            <th>Twitter Link</th>
+                            <th>Linkedin Link</th>
+                            <th>Instagram Link</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each data}}
+                        <tr>
+                            <td>{{_id}}</td>
+                            <td>{{name}}</td>
+                            <td>
+                                <a href="/{{pic}}" target="_blank">
+                                   <img src="/{{pic}}" height="100px" width="120px" alt="">
+                                </a>
+                            </td>
+                            <td>
+                                <div class="designation">
+                                    {{designation}}
+                                </div>
+                            </td>
+                            <td>{{#if facebook}}<a href="{{facebook}}">View Profile</a>{{else}}N/A{{/if}}</td>
+                            <td>{{#if twitter}}<a href="{{twitter}}">View Profile</a>{{else}}N/A{{/if}}</td>
+                            <td>{{#if linkedin}}<a href="{{linkedin}}">View Profile</a>{{else}}N/A{{/if}}</td>
+                            <td>{{#if instagram}}<a href="{{instagram}}">View Profile</a>{{else}}N/A{{/if}}</td>
+                            <td>
+                                <a href="/admin/team/edit/{{_id}}"><i class="fa fa-edit text-primary fs-4"></i></a>
+                            </td>
+                            <td>
+                                <a href="/admin/team/delete/{{_id}}"><i class="fa fa-trash text-danger fs-4"></i></a>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{{>footer}}

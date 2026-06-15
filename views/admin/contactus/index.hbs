@@ -1,0 +1,65 @@
+{{>header}}
+<title>Admin Dashboard | Contact Applications</title>
+{{>navbar}}
+{{>hero}}
+
+<div class="container-fluid my-3">
+  <div class="row">
+    <div class="col-md-3 my-3">
+      {{>sidebar}}
+    </div>
+    <div class="col-md-9 my-3">
+      <h5 class="bg-primary text-center p-2 text-light">Contact Applications</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>-Id</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Subject</th>
+              <th>Message</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each data}}
+            <tr>
+              <td>{{_id}}</td>
+              <td>{{name}}</td>
+              <td>{{email}}</td>
+              <td>{{phone}}</td>
+              <td class="shortDescription" title="{{subject}}">{{subject}}</td>
+              <td class="longDescription" title="{{message}}">{{message}}</td>
+              <td>{{dateHelper date}}</td>
+              <td>
+                {{#if active}}
+                  <span class="badge bg-warning text-dark">Open</span>
+                {{else}}
+                  <span class="badge bg-success">Closed</span>
+                {{/if}}
+              </td>
+              <td>
+                {{#if active}}
+                  <a href="/admin/contact-us/edit/{{_id}}" class="btn btn-sm btn-outline-primary">Mark Reviewed</a>
+                  <a href="/admin/contact-us/delete/{{_id}}" class="btn btn-sm btn-outline-danger"
+                     onclick="return confirm('Delete this application?');">Delete</a>
+                {{else}}
+                  <span class="text-muted me-1">No Action</span>
+                  <a href="/admin/contact-us/delete/{{_id}}" class="btn btn-sm btn-outline-danger"
+                     onclick="return confirm('Delete this application?');">Delete</a>
+                {{/if}}
+              </td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{>footer}}

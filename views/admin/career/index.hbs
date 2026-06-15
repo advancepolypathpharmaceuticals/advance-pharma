@@ -1,0 +1,77 @@
+{{>header}}
+<title>Admin Dashboard | Career Applications</title>
+{{>navbar}}
+{{>hero}}
+
+<div class="container-fluid my-3">
+  <div class="row">
+    <div class="col-md-3 my-3">
+      {{>sidebar}}
+    </div>
+    <div class="col-md-9 my-3">
+      <h5 class="bg-primary text-center p-2 text-light">Career Applications</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>-Id</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Position</th>
+              <th>Resume</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each data}}
+            <tr>
+              <td>{{_id}}</td>
+              <td>{{name}}</td>
+              <td>{{email}}</td>
+              <td>{{phone}}</td>
+              <td>{{position}}</td>
+              <td>
+                {{#if resume}}
+                  <a href="{{resume}}" class="btn btn-sm btn-outline-secondary" target="_blank">View</a>
+                {{else}}
+                  <span class="text-muted">N/A</span>
+                {{/if}}
+              </td>
+              <td>{{dateHelper date}}</td>
+              <td>
+                {{#if reviewed}}
+                  <span class="badge bg-success">Reviewed</span>
+                {{else}}
+                  <span class="badge bg-warning text-dark">Pending</span>
+                {{/if}}
+              </td>
+              <td>
+                {{#if reviewed}}
+                  <span class="text-muted">No Action</span>
+                  <a href="/admin/career/delete/{{_id}}" 
+                     class="btn btn-sm btn-outline-danger"
+                     onclick="return confirm('Delete this application?');">
+                    Delete
+                  </a>
+                {{else}}
+                  <a href="/admin/career/edit/{{_id}}" class="btn btn-sm btn-outline-primary">Mark Reviewed</a>
+                  <a href="/admin/career/delete/{{_id}}" 
+                     class="btn btn-sm btn-outline-danger"
+                     onclick="return confirm('Delete this application?');">
+                    Delete
+                  </a>
+                {{/if}}
+              </td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{>footer}}

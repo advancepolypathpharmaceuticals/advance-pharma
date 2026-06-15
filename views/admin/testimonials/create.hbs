@@ -1,0 +1,70 @@
+{{>header}}
+<title>Admin Dashboard | Testimonial</title>
+{{>navbar}}
+
+{{>hero}}
+<div class="container-fluid my-3">
+    <div class="row">
+        <div class="col-md-3 my-3">
+            {{>sidebar}}
+        </div>
+        <div class="col-md-9 my-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="bg-primary text-center p-2 text-light flex-grow-1 me-3">Create Testimonial</h5>
+                <a href="/admin/testimonial" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+            
+            <form action="/admin/testimonial/store" method="post" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input type="text" name="name" class="form-control border-2 border-primary"
+                                placeholder="Product Name" value="{{data.name}}">
+                                {{#if errorMessage.name}}
+                                <p class="text-danger">{{errorMessage.name}}</p>
+                                {{/if}}
+                            <label>User Name*</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input type="file" name="pic" class="form-control border-2 border-primary"
+                                placeholder="Product Image">
+                                {{#if errorMessage.pic}}
+                                <p class="text-danger">{{errorMessage.pic}}</p>
+                                {{/if}}
+                            <label>Upload User Image*</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <textarea name="message" class="form-control border-2 border-primary"
+                                placeholder="Product Message" id="message"
+                                style="height: 100px;">{{data.message}}</textarea>
+                                {{#if errorMessage.message}}
+                                <p class="text-danger">{{errorMessage.message}}</p>
+                                {{/if}}
+                            <label for="message">Testimonial Message*</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <input name="profession" class="form-control border-2 border-primary"
+                                placeholder="Testimonial Profession" value="{{data.profession}}" id="profession">
+                                {{#if errorMessage.profession}}
+                                <p class="text-danger">{{errorMessage.profession}}</p>
+                                {{/if}}
+                            <label for="price">Testimonial Profession*</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary w-100">Create</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{>footer}}

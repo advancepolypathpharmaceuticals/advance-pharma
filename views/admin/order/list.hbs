@@ -1,0 +1,323 @@
+{{>header}}
+<title>Admin Dashboard | Order Management</title>
+{{>navbar}}
+{{>hero}}
+
+<div class="container-fluid my-3">
+  <div class="row">
+    <div class="col-md-3 my-3">
+      {{>sidebar}}
+    </div>
+    <div class="col-md-9 my-3">
+      <h5 class="bg-primary text-center p-2 text-light">COD Order Management</h5>
+
+      <!-- Order Statistics -->
+      <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+          <div class="card text-white bg-primary">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h6>Total Orders</h6>
+                  <h3>{{orderStats.total}}</h3>
+                </div>
+                <div class="align-self-center"><i class="fas fa-shopping-cart fa-2x"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="card text-white bg-warning">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h6>Pending Orders</h6>
+                  <h3>{{orderStats.pending}}</h3>
+                </div>
+                <div class="align-self-center"><i class="fas fa-clock fa-2x"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="card text-white bg-success">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h6>Delivered</h6>
+                  <h3>{{orderStats.delivered}}</h3>
+                </div>
+                <div class="align-self-center"><i class="fas fa-check-circle fa-2x"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="mb-3">
+        <input type="text" id="orderSearch" class="form-control" placeholder="Search orders by Order ID, Customer name, Status, or Payment...">
+      </div>
+
+      <!-- Orders Table -->
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>Order Id</th>
+              <th>Customer</th>
+              <th>Amount</th>
+              <th>Date</th>
+              <th>View Order</th>
+              <th>Status</th>
+              <th>Payment</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each orders}}
+            <tr id="order-{{this._id}}">
+              <td><strong>{{this.orderNumber}}</strong></td>
+              <td>{{this.customer.firstName}} {{this.customer.lastName}}</td>
+              <td>{{formatPrice this.total}}</td>
+              <td>{{dateHelper this.createdAt}}</td>
+              <td>
+                <a href="/admin/order/details/{{this._id}}" class="btn btn-sm btn-primary">
+                  <i class="fas fa-eye"></i> View
+                </a>
+              </td>
+              <td>
+                <button id="status-{{this._id}}" class="btn btn-sm btn-{{getStatusColor this.status}} w-100"
+                  onclick="openStatusModal('{{this._id}}','{{this.status}}')">
+                  <i class="fas fa-{{getStatusIcon this.status}} me-1"></i> {{capitalize this.status}}
+                </button>
+              </td>
+              <td>
+                <button id="payment-{{this._id}}" class="btn btn-sm btn-{{getPaymentStatusColor this.paymentStatus}} w-100"
+                  onclick="openPaymentModal('{{this._id}}','{{this.paymentStatus}}')">
+                  <i class="fas fa-{{getPaymentStatusIcon this.paymentStatus}} me-1"></i> {{capitalize this.paymentStatus}}
+                </button>
+              </td>
+            </tr>
+            {{else}}
+            <tr>
+              <td colspan="7" class="text-center text-muted py-4">
+                <i class="fas fa-shopping-cart fa-3x mb-3"></i><br>No orders found
+              </td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+        <!-- Pagination -->
+        <ul id="pagination" class="pagination justify-content-center mt-3"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Status Modal -->
+<div class="modal fade" id="statusModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="statusForm">
+        <div class="modal-header">
+          <h5 class="modal-title">Update Status</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-check"><input class="form-check-input" type="radio" name="status" value="pending" id="statusPending"><label class="form-check-label" for="statusPending"><i class="fas fa-clock text-warning me-2"></i>Pending</label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="status" value="confirmed" id="statusConfirmed"><label class="form-check-label" for="statusConfirmed"><i class="fas fa-check-circle text-info me-2"></i>Confirmed</label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="status" value="processing" id="statusProcessing"><label class="form-check-label" for="statusProcessing"><i class="fas fa-cog text-primary me-2"></i>Processing</label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="status" value="shipped" id="statusShipped"><label class="form-check-label" for="statusShipped"><i class="fas fa-shipping-fast text-secondary me-2"></i>Shipped</label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="status" value="delivered" id="statusDelivered"><label class="form-check-label" for="statusDelivered"><i class="fas fa-check-double text-success me-2"></i>Delivered</label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="status" value="cancelled" id="statusCancelled"><label class="form-check-label" for="statusCancelled"><i class="fas fa-times-circle text-danger me-2"></i>Cancelled</label></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Update Status</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Payment Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="paymentForm">
+        <div class="modal-header">
+          <h5 class="modal-title">Update Payment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-check"><input class="form-check-input" type="radio" name="payment" value="paid" id="paymentPaid"><label class="form-check-label" for="paymentPaid"><i class="fas fa-check-circle text-success me-2"></i>Paid</label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="payment" value="pending" id="paymentPending"><label class="form-check-label" for="paymentPending"><i class="fas fa-clock text-warning me-2"></i>Pending</label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="payment" value="failed" id="paymentFailed"><label class="form-check-label" for="paymentFailed"><i class="fas fa-exclamation-circle text-danger me-2"></i>Failed</label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="payment" value="refunded" id="paymentRefunded"><label class="form-check-label" for="paymentRefunded"><i class="fas fa-undo text-info me-2"></i>Refunded</label></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Update Payment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentOrderId = null;
+const rowsPerPage = 10;
+
+// OPEN MODALS
+function openStatusModal(id, status){
+  currentOrderId = id;
+  document.querySelectorAll('#statusForm input').forEach(r=>{
+    r.checked = r.value === status;
+  });
+  new bootstrap.Modal(document.getElementById('statusModal')).show();
+}
+
+function openPaymentModal(id, payment){
+  currentOrderId = id;
+  document.querySelectorAll('#paymentForm input').forEach(r=>{
+    r.checked = r.value === payment;
+  });
+  new bootstrap.Modal(document.getElementById('paymentModal')).show();
+}
+
+// STATUS UPDATE
+document.getElementById('statusForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+
+  const status = document.querySelector('#statusForm input:checked').value;
+
+  const res = await fetch(`/admin/order/update/${currentOrderId}`,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({status})
+  });
+
+  const result = await res.json();
+
+  if(result.success){
+    const btn = document.getElementById(`status-${currentOrderId}`);
+
+    btn.innerHTML = `
+      <i class="fas fa-${getStatusIcon(result.status)} me-1"></i>
+      ${capitalize(result.status)}
+    `;
+
+    btn.className = `btn btn-sm btn-${getStatusColor(result.status)} w-100`;
+
+    bootstrap.Modal.getInstance(document.getElementById('statusModal')).hide();
+  }
+});
+
+// PAYMENT UPDATE
+document.getElementById('paymentForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+
+  const paymentStatus = document.querySelector('#paymentForm input:checked').value;
+
+  const res = await fetch(`/admin/order/update/${currentOrderId}`,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({paymentStatus})
+  });
+
+  const result = await res.json();
+
+  if(result.success){
+    const btn = document.getElementById(`payment-${currentOrderId}`);
+
+    btn.innerHTML = `
+      <i class="fas fa-${getPaymentStatusIcon(result.paymentStatus)} me-1"></i>
+      ${capitalize(result.paymentStatus)}
+    `;
+
+    btn.className = `btn btn-sm btn-${getPaymentStatusColor(result.paymentStatus)} w-100`;
+
+    bootstrap.Modal.getInstance(document.getElementById('paymentModal')).hide();
+  }
+});
+
+// HELPERS
+function capitalize(str){
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function getStatusColor(s){
+  return {pending:'warning',confirmed:'info',processing:'primary',shipped:'secondary',delivered:'success',cancelled:'danger'}[s];
+}
+
+function getPaymentStatusColor(s){
+  return {pending:'warning',paid:'success',failed:'danger',refunded:'info'}[s];
+}
+
+function getStatusIcon(s){
+  return {pending:'clock',confirmed:'check-circle',processing:'cog',shipped:'shipping-fast',delivered:'check-double',cancelled:'times-circle'}[s];
+}
+
+function getPaymentStatusIcon(s){
+  return {pending:'clock',paid:'check-circle',failed:'exclamation-circle',refunded:'undo'}[s];
+}
+
+// --- Pagination & Search ---
+const tableBody = document.querySelector('table tbody');
+const allRows = Array.from(tableBody.querySelectorAll('tr'));
+const pagination = document.getElementById('pagination');
+let filteredRows = allRows.filter(r => !r.querySelector('td[colspan="7"]'));
+let currentPage = 1;
+
+function showPage(page) {
+  currentPage = page;
+  const start = (page - 1) * rowsPerPage;
+  const end = start + rowsPerPage;
+
+  allRows.forEach(row => row.style.display = 'none'); // hide all rows
+  filteredRows.slice(start, end).forEach(row => row.style.display = '');
+  // Always show "No orders found" row if applicable
+  const noOrderRow = allRows.find(r => r.querySelector('td[colspan="7"]'));
+  if(filteredRows.length === 0 && noOrderRow) noOrderRow.style.display = '';
+  else if(noOrderRow) noOrderRow.style.display = 'none';
+
+  renderPagination();
+}
+
+function renderPagination() {
+  const pageCount = Math.ceil(filteredRows.length / rowsPerPage);
+  pagination.innerHTML = '';
+  for(let i=1; i<=pageCount; i++){
+    const li = document.createElement('li');
+    li.className = 'page-item' + (i === currentPage ? ' active' : '');
+    const a = document.createElement('a');
+    a.className = 'page-link';
+    a.href = '#';
+    a.textContent = i;
+    a.addEventListener('click', e => { e.preventDefault(); showPage(i); });
+    li.appendChild(a);
+    pagination.appendChild(li);
+  }
+}
+
+showPage(1);
+
+// --- Search ---
+const searchInput = document.getElementById('orderSearch');
+if(searchInput){
+  searchInput.addEventListener('input', function() {
+    const query = this.value.toLowerCase();
+    filteredRows = allRows.filter(row => {
+      if(row.querySelector('td[colspan="7"]')) return false;
+      const orderId = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+      const customer = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+      const status = row.querySelector('td:nth-child(6)').textContent.toLowerCase();
+      const payment = row.querySelector('td:nth-child(7)').textContent.toLowerCase();
+      return orderId.includes(query) || customer.includes(query) || status.includes(query) || payment.includes(query);
+    });
+    showPage(1);
+  });
+}
+</script>
+
+{{>footer}}

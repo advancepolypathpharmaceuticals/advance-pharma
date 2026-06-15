@@ -1,0 +1,215 @@
+{{>header}}
+<title>Advance Poly Pathic Pharmaceuticals Limited</title>
+{{>navbar}}
+{{>hero}}
+
+<div class="site-section my-5">
+  <div class="container">
+
+    {{#if cart.length}}
+    <!-- 🛒 Cart Table (When Cart Has Items) -->
+    <div class="row mb-5">
+      <div class="col-md-12">
+        <div class="site-blocks-table">
+          <table class="table table-bordered text-center">
+            <thead class="table-dark">
+              <tr>
+                <th>S. No.</th>
+                <th>Image</th>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Remove</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each cart}}
+              <tr data-id="{{_id}}">
+                <td>{{indexPlusOne @index}}</td>
+                <td><img src="/{{pic}}" alt="{{name}}" class="table-product-img"
+                    style="width:80px; height:80px; object-fit:contain;"></td>
+                <td>{{name}}</td>
+                <td>{{formatPrice price}}</td>
+                <td>
+                  <div class="d-flex align-items-center justify-content-center">
+                    <button type="button" class="btn btn-outline-primary btn-sm js-btn-minus"
+                      data-id="{{_id}}">−</button>
+                    <input type="number" value="{{quantity}}" class="form-control text-center mx-2 quantity-input"
+                      style="width:60px;" data-id="{{_id}}">
+                    <button type="button" class="btn btn-outline-primary btn-sm js-btn-plus"
+                      data-id="{{_id}}">+</button>
+                  </div>
+                </td>
+                <td class="item-total">{{formatPrice (multiply price quantity)}}</td>
+                <td>
+                  <a href="/cart/remove/{{_id}}" class="btn btn-danger btn-sm p-1" style="font-size:12px;">X</a>
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center my-3">
+    <a href="/all-products" class="btn btn-outline-secondary btn-sm">
+      <i class="fa fa-plus"></i> Add More Products
+    </a>
+  </div>
+
+  <div class="row justify-content-center mt-5 mb-5">
+    <div class="col-md-6 col-lg-4">
+      <div class="bg-light p-4 rounded-4 shadow-lg border border-1">
+        <h5 class="mb-3 text-center">
+          <i class="fas fa-receipt me-2 text-primary"></i>Order Summary
+        </h5>
+
+        <div class="d-flex justify-content-between mb-2">
+          <span>Subtotal:</span>
+          <span id="cart-subtotal"></span>
+        </div>
+
+        <div class="d-flex justify-content-between mb-2 text-success" style="display:flex;">
+          <span>Discount:</span>
+          <span id="cart-discount"></span>
+        </div>
+
+        <div class="d-flex justify-content-between mb-2">
+          <span>Shipping:</span>
+          <span id="cart-shipping"></span>
+        </div>
+
+        <hr>
+
+        <div class="d-flex justify-content-between mb-3 fw-bold">
+          <span>Total:</span>
+          <span id="cart-total" class="text-primary"></span>
+        </div>
+
+        <div class="alert alert-warning py-2 small mb-3 text-center"
+          style="background:#fff9e6; border:1px dashed #ffc107;">
+          <i class="fas fa-tag me-1 text-warning"></i>
+          Checkout now to unlock <strong>extra discounts!</strong>
+        </div>
+
+        <a href="/checkout" class="btn btn-primary btn-lg w-100 mb-2">
+          Proceed to Checkout <i class="fas fa-arrow-right ms-1"></i>
+        </a>
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+
+{{else}}
+<!-- Empty Cart Section (When Cart Is Empty) -->
+<div class="text-center my-5 py-5">
+  <img src="/img/empty.jpg" alt="Empty Cart" style="width:180px; max-width:100%; margin-bottom:20px;">
+  <h4 class="fw-bold mb-2">Your Cart is Empty!</h4>
+  <p class="text-muted mb-4">Looks like you haven’t added any medicines yet.<br>Stock up on your health essentials and
+    stay well!</p>
+  <a href="/all-products" class="btn btn-outline-primary px-4 py-2">Continue Browse Medicines</a>
+</div>
+{{/if}}
+
+</div>
+</div>
+
+<script>
+  const updateCart = async (id, quantity) => {
+    try {
+      const res = await fetch(`/cart/update/${id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ quantity })
+      });
+      const data = await res.json();
+
+      // Update row total if exists
+      const row = document.querySelector(`tr[data-id="${id}"]`);
+      if (row) row.querySelector(".item-total").textContent = data.itemTotal.toFixed(2);
+
+      // Update summary totals
+      document.getElementById("cart-subtotal").textContent = data.subtotal.toFixed(2);
+
+      const discountEl = document.getElementById("cart-discount");
+      if (data.discount > 0) {
+        discountEl.textContent = `- ${data.discount.toFixed(2)}`;
+        discountEl.parentElement.style.display = "flex";
+      } else {
+        discountEl.textContent = "";
+        discountEl.parentElement.style.display = "none";
+      }
+
+
+      const shippingEl = document.getElementById("cart-shipping");
+      shippingEl.textContent = data.shipping > 0 ? `₹${data.shipping.toFixed(2)}` : "FREE";
+
+      document.getElementById("cart-total").textContent = data.total.toFixed(2);
+
+      // Update navbar count
+      let totalItems = 0;
+      document.querySelectorAll(".quantity-input").forEach(input => totalItems += parseInt(input.value));
+      document.getElementById("cart-count").textContent = totalItems;
+
+    } catch (err) {
+      console.error("Error updating cart:", err);
+    }
+  };
+
+  // Quantity buttons
+  document.querySelectorAll(".js-btn-minus").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.id;
+      const input = document.querySelector(`.quantity-input[data-id="${id}"]`);
+      if (input.value > 1) input.value--;
+      updateCart(id, input.value);
+    });
+  });
+
+  document.querySelectorAll(".js-btn-plus").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.id;
+      const input = document.querySelector(`.quantity-input[data-id="${id}"]`);
+      input.value++;
+      updateCart(id, input.value);
+    });
+  });
+
+  document.querySelectorAll(".quantity-input").forEach(input => {
+    input.addEventListener("change", () => {
+      const id = input.dataset.id;
+      if (input.value < 1) input.value = 1;
+      updateCart(id, input.value);
+    });
+  });
+
+  // Initialize totals on page load
+  document.addEventListener("DOMContentLoaded", () => {
+    const subtotal = parseFloat("{{subtotal}}") || 0;
+    const discount = parseFloat("{{discount}}") || 0;
+    const shipping = parseFloat("{{shipping}}") || 0;
+    const total = parseFloat("{{total}}") || 0;
+
+    document.getElementById("cart-subtotal").textContent = subtotal.toFixed(2);
+    const discountEl = document.getElementById("cart-discount");
+    if (discount > 0) {
+      discountEl.textContent = `- ${discount.toFixed(2)}`;
+      discountEl.parentElement.style.display = "flex";
+    }
+    document.getElementById("cart-shipping").textContent = shipping > 0 ? `₹${shipping.toFixed(2)}` : "FREE";
+    document.getElementById("cart-total").textContent = total.toFixed(2);
+
+    // Update navbar count
+    let totalItems = 0;
+    document.querySelectorAll(".quantity-input").forEach(input => totalItems += parseInt(input.value));
+    document.getElementById("cart-count").textContent = totalItems;
+  });
+</script>
+{{>footer}}

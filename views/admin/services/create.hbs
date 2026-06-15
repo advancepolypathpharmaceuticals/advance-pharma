@@ -1,0 +1,104 @@
+{{>header}}
+<title>Admin Dashboard | Services | Add Products</title>
+{{>navbar}}
+
+{{>hero}}
+<div class="container-fluid my-3">
+    <div class="row">
+        <div class="col-md-3 my-3">
+            {{>sidebar}}
+        </div>
+        <div class="col-md-9 my-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="bg-primary text-center p-2 text-light flex-grow-1 me-3">Add New Product</h5>
+                <a href="/admin/service" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+            
+            <form action="/admin/service/store" method="post" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input type="text" name="name" class="form-control border-2 border-primary"
+                                placeholder="Product Name" value="{{data.name}}">
+                            {{#if errorMessage.name}}
+                            <p class="text-danger">{{errorMessage.name}}</p>
+                            {{/if}}
+                            <label>Product Name*</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            <input type="file" name="pic" class="form-control border-2 border-primary"
+                                placeholder="Product Image">
+                            {{#if errorMessage.pic}}
+                            <p class="text-danger">{{errorMessage.pic}}</p>
+                            {{/if}}
+                            <label>Upload Image*</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <textarea name="shortDescription" class="form-control border-2 border-primary"
+                                placeholder="Product Short Description" id="shortDescription"
+                                style="height: 100px;">{{data.shortDescription}}</textarea>
+                            {{#if errorMessage.shortDescription}}
+                            <p class="text-danger">{{errorMessage.shortDescription}}</p>
+                            {{/if}}
+                            <label for="shortDescription">Product Short Description*</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <input type="number" name="price" class="form-control border-2 border-primary"
+                                placeholder="Product Price" value="{{data.price}}" id="price" step="0.01" min="0">
+                            {{#if errorMessage.price}}
+                            <p class="text-danger">{{errorMessage.price}}</p>
+                            {{/if}}
+                            <label for="price">Product Price*</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <textarea name="introduction" class="form-control border-2 border-primary"
+                                placeholder="Product Introduction"
+                                style="height: 100px;">{{data.introduction}}</textarea>
+                            <label>Product Introduction</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <textarea name="uses" class="form-control border-2 border-primary"
+                                placeholder="Product Uses" style="height: 100px;">{{data.uses}}</textarea>
+                            <label>Product Uses</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <textarea name="benefits" class="form-control border-2 border-primary"
+                                placeholder="Product Benefits" style="height: 100px;">{{data.benefits}}</textarea>
+                            <label>Product Benefits</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <textarea name="sideEffects" class="form-control border-2 border-primary"
+                                placeholder="Product Side Effects"
+                                style="height: 100px;">{{data.sideEffects}}</textarea>
+                            <label>Product Side Effects</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary w-100">Create</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{>footer}}

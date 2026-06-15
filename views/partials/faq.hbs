@@ -1,0 +1,48 @@
+<!-- FAQs Start -->
+<div class="container-fluid faq-section py-5">
+    <div class="container py-5 overflow-hidden">
+        <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.2s" style="max-width: 800px;">
+            <h4 class="text-primary">FAQs</h4>
+            <h1 class="display-5 mb-4">Frequently Asked Questions</h1>
+            <p class="mb-0">
+                Have questions? Find answers to the most common queries below.
+            </p>
+        </div>
+
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6 wow fadeInLeft" data-wow-delay="0.2s">
+                <div class="accordion accordion-flush bg-light rounded p-5" id="accordionFlushSection">
+                    
+                    {{#each faqs}}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading-{{_id}}">
+                            <button class="accordion-button collapsed rounded-top" 
+                                    type="button" 
+                                    data-bs-toggle="collapse" 
+                                    data-bs-target="#flush-{{_id}}" 
+                                    aria-expanded="false" 
+                                    aria-controls="flush-{{_id}}">
+                                {{question}}
+                            </button>
+                        </h2>
+                        <div id="flush-{{_id}}" 
+                             class="accordion-collapse collapse" 
+                             aria-labelledby="heading-{{_id}}" 
+                             data-bs-parent="#accordionFlushSection">
+                            <div class="accordion-body">{{answer}}</div>
+                        </div>
+                    </div>
+                    {{/each}}
+
+                </div>
+            </div>
+
+            <div class="col-lg-6 wow fadeInRight" data-wow-delay="0.2s">
+                <div class="bg-primary rounded">
+                    <img src="../../public/img/about-2.jpg" class="img-fluid w-100" alt="FAQ illustration">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- FAQs End -->

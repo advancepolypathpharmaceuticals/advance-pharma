@@ -1,0 +1,721 @@
+{{>header}}
+<title>Advance Poly Pathic Pharmaceuticals Limited</title>
+{{>navbar}}
+{{>hero}}
+
+<style>
+    .login-container {
+        background: linear-gradient(135deg, #e8f8f3 0%, #d1f2eb 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 500px;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .form-content {
+        padding: 40px 30px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-input {
+        width: 100%;
+        height: 50px;
+        padding: 12px 15px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+    }
+
+    .form-input.error {
+        border-color: #dc3545;
+        background: #fff5f5;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: #00d084;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(0, 208, 132, 0.1);
+    }
+
+    .form-btn {
+        width: 100%;
+        height: 50px;
+        background: #00d084;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+    }
+
+    .form-btn:hover {
+        background: #00b874;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 208, 132, 0.3);
+    }
+
+    .field-error {
+        color: #dc3545;
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+    }
+
+    .form-title {
+        text-align: center;
+        color: #00d084;
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 30px;
+    }
+
+    .logo-section {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .logo-section img {
+        width: 72px;
+        height: 72px;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+
+    .navbar,
+    .hero {
+        display: none;
+    }
+
+    .alert {
+        margin: 20px 30px 0 30px;
+        border-radius: 8px;
+        border: none;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 12px 15px;
+    }
+
+    .alert-danger {
+        background: #f8d7da;
+        color: #721c24;
+        border-left: 4px solid #dc3545;
+    }
+
+    .alert-success {
+        background: #d1edff;
+        color: #155724;
+        border-left: 4px solid #00d084;
+    }
+
+    .btn-close {
+        padding: 0.75rem;
+    }
+
+    .admin-note {
+        background: #e8f4fd;
+        border: 1px solid #b3d9ff;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .admin-note h5 {
+        color: #0066cc;
+        margin-bottom: 10px;
+    }
+
+    .secret-warning {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 15px;
+        text-align: center;
+        font-size: 12px;
+        color: #856404;
+    }
+
+    /* Profile Picture Upload Styles */
+    .profile-pic-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .profile-pic-preview {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #e9ecef;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .profile-pic-preview:hover {
+        border-color: #00d084;
+    }
+
+    .profile-upload-text {
+        margin-top: 10px;
+        font-size: 12px;
+        color: #6c757d;
+    }
+
+    .file-input {
+        display: none;
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-card">
+        <!-- Display Server Error Messages -->
+        {{#if (eq query.error 'invalid_file_type')}}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            Only JPEG, PNG, GIF and WebP image files are allowed.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {{/if}}
+
+        {{#if (eq query.error 'file_too_large')}}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            Image is too large. Maximum allowed size is 2MB.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {{/if}}
+
+        {{#if (eq query.error 'upload_error')}}
+        <div class="alert alert-danger">
+            Upload failed. Please try again.
+        </div>
+        {{/if}}
+
+        {{#if (eq query.error 'password_mismatch')}}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            Password and confirm password do not match.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {{/if}}
+
+        {{#if (eq query.error 'user_exists')}}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            An account with this email already exists.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {{/if}}
+
+        {{#if (eq query.error 'registration_failed')}}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            Registration failed. Please try again.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {{/if}}
+
+        <!-- Success Message -->
+        {{#if (eq query.success 'true')}}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            <strong>Success!</strong> Admin account has been created successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {{/if}}
+
+        <div class="form-content">
+            <div class="logo-section">
+                <img src="/img/Logo.jpg" alt="Company Logo" class="mb-3">
+            </div>
+
+            <div class="secret-warning">
+                <i class="fas fa-lock me-1"></i>
+                <strong>Admin Registration Portal</strong>
+            </div>
+
+            <div class="admin-note">
+                <h5><i class="fas fa-user-shield me-2"></i>Admin Registration</h5>
+                <p class="mb-0">This form is for creating new Admin accounts.</p>
+            </div>
+
+            <div class="form-title">Create Admin Account</div>
+
+            <form id="adminRegisterForm" action="/register-admin" method="post" enctype="multipart/form-data">
+             <input type="hidden" name="recaptchaToken" id="registerRecaptchaToken">
+            
+                <!-- Profile Picture Upload -->
+                <div class="profile-pic-container">
+                    <img id="adminProfilePreview" src="/img/default-profile.png" class="profile-pic-preview"
+                        onclick="document.getElementById('adminPic').click()" alt="Profile Preview">
+                    <input type="file" id="adminPic" name="pic" class="file-input" accept="image/*"
+                        onchange="previewAdminImage(this)">
+                    <div class="profile-upload-text">
+                        Click to upload profile picture (Optional)<br>
+                        <small>JPEG, PNG, GIF, WebP - Max 2MB</small>
+                    </div>
+                    <span class="field-error" id="admin-pic-error"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <input type="text" name="firstName" class="form-control border-2 border-primary"
+                                    id="admin-firstName" placeholder="First Name" value="{{data.firstName}}">
+                                <label for="admin-firstName">First Name</label>
+                            </div>
+                            <span class="field-error" id="admin-firstName-error"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <input type="text" name="lastName" class="form-control border-2 border-primary"
+                                    id="admin-lastName" placeholder="Last Name" value="{{data.lastName}}">
+                                <label for="admin-lastName">Last Name</label>
+                            </div>
+                            <span class="field-error" id="admin-lastName-error"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-floating">
+                        <input type="email" name="email" class="form-control border-2 border-primary" id="admin-email"
+                            placeholder="Enter Your Email Address" value="{{data.email}}">
+                        <label for="admin-email">Email Address</label>
+                    </div>
+                    <span class="field-error" id="admin-email-error"></span>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-floating">
+                        <input type="text" name="username" class="form-control border-2 border-primary"
+                            id="admin-username" placeholder="Username" value="{{data.username}}">
+                        <label for="admin-username">Username</label>
+                    </div>
+                    <span class="field-error" id="admin-username-error"></span>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-floating">
+                        <input type="tel" name="phone" class="form-control border-2 border-primary" id="admin-phone"
+                            placeholder="Phone Number" value="{{data.phone}}">
+                        <label for="admin-phone">Phone Number</label>
+                    </div>
+                    <span class="field-error" id="admin-phone-error"></span>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-floating">
+                        <input type="password" name="password" class="form-control border-2 border-primary"
+                            id="admin-password" placeholder="Enter Password">
+                        <label for="admin-password">Password</label>
+                    </div>
+                    <span class="field-error" id="admin-password-error"></span>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-floating">
+                        <input type="password" name="confirmPassword" class="form-control border-2 border-primary"
+                            id="admin-confirm-password" placeholder="Confirm Password">
+                        <label for="admin-confirm-password">Confirm Password</label>
+                    </div>
+                    <span class="field-error" id="admin-confirm-password-error"></span>
+                </div>
+
+                <div class="d-grid mb-3">
+                    <button type="submit" class="form-btn">Create Admin Account</button>
+                </div>
+
+                <div class="text-center">
+                    <a href="/admin" class="text-decoration-none me-3">
+                        <i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard
+                    </a>
+                    <a href="/login" class="text-decoration-none">
+                        <i class="fas fa-sign-in-alt me-2"></i>Back to Login
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Use the same JavaScript as your super admin registration page
+    // Copy the entire JavaScript from your 9tiVhuLQwl7bqF00oGoQ.hbs file
+    // and replace 'super' with 'admin' in all IDs and function names
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log("✅ Admin Registration script loaded");
+
+        // Form validation functions (same as super admin)
+        function validateField(value, fieldName) {
+            if (!value || value.trim() === '') {
+                return `${fieldName} is required`;
+            }
+            return '';
+        }
+
+        function validateEmail(email) {
+            if (!email || email.trim() === '') {
+                return 'Email is required';
+            }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                return 'Please enter a valid email address';
+            }
+            return '';
+        }
+
+        function validatePhone(phone) {
+            if (!phone || phone.trim() === '') {
+                return 'Phone number is required';
+            }
+            const cleanPhone = phone.replace(/\D/g, '');
+            if (cleanPhone.length !== 10) {
+                return 'Phone number must be 10 digits';
+            }
+            return '';
+        }
+
+        function validatePassword(password) {
+            if (!password || password.trim() === '') {
+                return 'Password is required';
+            }
+            if (password.length < 6) {
+                return 'Password must be at least 6 characters';
+            }
+            return '';
+        }
+
+        function validateConfirmPassword(password, confirmPassword) {
+            if (!confirmPassword || confirmPassword.trim() === '') {
+                return 'Please confirm your password';
+            }
+            if (password !== confirmPassword) {
+                return 'Passwords do not match';
+            }
+            return '';
+        }
+
+        function showError(fieldId, message) {
+            const errorElement = document.getElementById(fieldId);
+            const inputElement = document.getElementById(fieldId.replace('-error', ''));
+
+            if (errorElement && inputElement) {
+                errorElement.textContent = message;
+                inputElement.classList.add('error');
+            }
+        }
+
+        function clearError(fieldId) {
+            const errorElement = document.getElementById(fieldId);
+            const inputElement = document.getElementById(fieldId.replace('-error', ''));
+
+            if (errorElement && inputElement) {
+                errorElement.textContent = '';
+                inputElement.classList.remove('error');
+            }
+        }
+
+        function clearAllErrors() {
+            const errorElements = document.querySelectorAll('.field-error');
+            const inputElements = document.querySelectorAll('.form-input');
+
+            errorElements.forEach(element => {
+                element.textContent = '';
+            });
+
+            inputElements.forEach(element => {
+                element.classList.remove('error');
+            });
+        }
+
+        function clearForm() {
+            const formInputs = document.querySelectorAll('#adminRegisterForm .form-input');
+            formInputs.forEach(input => {
+                if (input.type !== 'file') {
+                    input.value = '';
+                }
+            });
+            document.getElementById('adminProfilePreview').src = '/img/default-profile.png';
+            const fileInput = document.getElementById('adminPic');
+            if (fileInput) fileInput.value = '';
+        }
+
+        // Admin Register form validation
+        const adminRegisterForm = document.getElementById('adminRegisterForm');
+        if (adminRegisterForm) {
+            adminRegisterForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                clearAllErrors();
+
+                const firstName = document.getElementById('admin-firstName').value;
+                const lastName = document.getElementById('admin-lastName').value;
+                const email = document.getElementById('admin-email').value;
+                const username = document.getElementById('admin-username').value;
+                const phone = document.getElementById('admin-phone').value;
+                const password = document.getElementById('admin-password').value;
+                const confirmPassword = document.getElementById('admin-confirm-password').value;
+
+                let hasError = false;
+
+                // Validate firstName
+                const firstNameError = validateField(firstName, 'First name');
+                if (firstNameError) {
+                    showError('admin-firstName-error', firstNameError);
+                    hasError = true;
+                }
+
+                // Validate lastName
+                const lastNameError = validateField(lastName, 'Last name');
+                if (lastNameError) {
+                    showError('admin-lastName-error', lastNameError);
+                    hasError = true;
+                }
+
+                // Validate email
+                const emailError = validateEmail(email);
+                if (emailError) {
+                    showError('admin-email-error', emailError);
+                    hasError = true;
+                }
+
+                // Validate username
+                const usernameError = validateField(username, 'Username');
+                if (usernameError) {
+                    showError('admin-username-error', usernameError);
+                    hasError = true;
+                }
+
+                // Validate phone
+                const phoneError = validatePhone(phone);
+                if (phoneError) {
+                    showError('admin-phone-error', phoneError);
+                    hasError = true;
+                }
+
+                // Validate password
+                const passwordError = validatePassword(password);
+                if (passwordError) {
+                    showError('admin-password-error', passwordError);
+                    hasError = true;
+                }
+
+                // Validate confirm password
+                const confirmPasswordError = validateConfirmPassword(password, confirmPassword);
+                if (confirmPasswordError) {
+                    showError('admin-confirm-password-error', confirmPasswordError);
+                    hasError = true;
+                }
+
+                console.log('Admin form validation - hasError:', hasError);
+
+                if (!hasError) {
+                    console.log('Submitting admin registration form...');
+                    this.submit();
+                } else {
+                    console.log('Form has validation errors, preventing submission');
+                }
+            });
+        }
+
+        // Real-time validation on input
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('blur', function () {
+                const fieldId = this.id;
+                const value = this.value;
+
+                if (fieldId === 'admin-firstName') {
+                    const error = validateField(value, 'First name');
+                    if (error) {
+                        showError('admin-firstName-error', error);
+                    } else {
+                        clearError('admin-firstName-error');
+                    }
+                }
+                else if (fieldId === 'admin-lastName') {
+                    const error = validateField(value, 'Last name');
+                    if (error) {
+                        showError('admin-lastName-error', error);
+                    } else {
+                        clearError('admin-lastName-error');
+                    }
+                }
+                else if (fieldId === 'admin-email') {
+                    const error = validateEmail(value);
+                    if (error) {
+                        showError('admin-email-error', error);
+                    } else {
+                        clearError('admin-email-error');
+                    }
+                }
+                else if (fieldId === 'admin-username') {
+                    const error = validateField(value, 'Username');
+                    if (error) {
+                        showError('admin-username-error', error);
+                    } else {
+                        clearError('admin-username-error');
+                    }
+                }
+                else if (fieldId === 'admin-phone') {
+                    const error = validatePhone(value);
+                    if (error) {
+                        showError('admin-phone-error', error);
+                    } else {
+                        clearError('admin-phone-error');
+                    }
+                }
+                else if (fieldId === 'admin-password') {
+                    const error = validatePassword(value);
+                    if (error) {
+                        showError('admin-password-error', error);
+                    } else {
+                        clearError('admin-password-error');
+                    }
+                }
+                else if (fieldId === 'admin-confirm-password') {
+                    const password = document.getElementById('admin-password').value;
+                    const error = validateConfirmPassword(password, value);
+                    if (error) {
+                        showError('admin-confirm-password-error', error);
+                    } else {
+                        clearError('admin-confirm-password-error');
+                    }
+                }
+            });
+
+            // Clear error on input
+            input.addEventListener('input', function () {
+                const fieldId = this.id;
+                if (fieldId === 'admin-firstName') {
+                    clearError('admin-firstName-error');
+                } else if (fieldId === 'admin-lastName') {
+                    clearError('admin-lastName-error');
+                } else if (fieldId === 'admin-email') {
+                    clearError('admin-email-error');
+                } else if (fieldId === 'admin-username') {
+                    clearError('admin-username-error');
+                } else if (fieldId === 'admin-phone') {
+                    clearError('admin-phone-error');
+                } else if (fieldId === 'admin-password') {
+                    clearError('admin-password-error');
+                } else if (fieldId === 'admin-confirm-password') {
+                    clearError('admin-confirm-password-error');
+                }
+            });
+        });
+
+        // Phone number formatting
+        const phoneInput = document.getElementById('admin-phone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function (e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 10) {
+                    value = value.substring(0, 10);
+                }
+                e.target.value = value;
+            });
+        }
+
+        // Handle success message and clear form
+        const urlParams = new URLSearchParams(window.location.search);
+        const successParam = urlParams.get('success');
+
+        if (successParam === 'true') {
+            console.log('✅ Registration successful, clearing form...');
+
+            // Clear form after successful registration
+            setTimeout(() => {
+                clearForm();
+            }, 100);
+
+            // Auto-remove success message after 8 seconds
+            setTimeout(() => {
+                const successAlert = document.querySelector('.alert-success');
+                if (successAlert) {
+                    const closeBtn = successAlert.querySelector('.btn-close');
+                    if (closeBtn) closeBtn.click();
+                }
+            }, 8000);
+        }
+
+        // Auto-remove error messages after 8 seconds
+        setTimeout(() => {
+            const alerts = document.querySelectorAll('.alert-danger');
+            alerts.forEach(alert => {
+                const closeBtn = alert.querySelector('.btn-close');
+                if (closeBtn) closeBtn.click();
+            });
+        }, 8000);
+
+        // Close button functionality for alerts
+        document.querySelectorAll('.btn-close').forEach(btn => {
+            btn.addEventListener('click', function () {
+                this.closest('.alert').remove();
+            });
+        });
+
+        // Auto-focus first input on page load
+        setTimeout(() => {
+            const firstInput = document.querySelector('.form-input');
+            if (firstInput) firstInput.focus();
+        }, 500);
+    });
+
+    // Profile picture preview for admin form
+    function previewAdminImage(input) {
+        const preview = document.getElementById('adminProfilePreview');
+        const file = input.files[0];
+
+        if (file) {
+            // Validate file type
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+            if (!allowedTypes.includes(file.type)) {
+                document.getElementById('admin-pic-error').textContent = 'Please select a valid image file (JPEG, PNG, GIF, WebP)';
+                input.value = '';
+                return;
+            }
+
+            // Validate file size (2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                document.getElementById('admin-pic-error').textContent = 'Image size must be less than 2MB';
+                input.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                document.getElementById('admin-pic-error').textContent = '';
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+
+<script>
+attachRecaptcha("registerForm", "register");
+</script>
+
+{{>footer}}

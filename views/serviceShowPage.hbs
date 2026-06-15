@@ -1,0 +1,78 @@
+{{>header}}
+<title>Advance Poly Pathic Pharmaceuticals Limited</title>
+{{>navbar}}
+{{>hero}}
+
+<div class="container my-4">
+    <div class="row">
+        <!-- Left Side (Products List) -->
+        <div class="col-md-4">
+            <div class="list-group shadow-sm">
+                <a href="/service"
+                    class="text-center list-group-item list-group-item-action {{#unless service}}active{{/unless}}">
+                    All Products
+                </a>
+                {{#each services}}
+                <a href="/service/{{_id}}"
+                    class="list-group-item list-group-item-action {{#if (eq ../service._id _id)}}active{{/if}}">
+                    {{name}}
+                </a>
+                {{/each}}
+            </div>
+        </div>
+
+        <!-- Right Side (Service Details) -->
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <img src="/{{service.pic}}" alt="{{service.name}}" class="card-img-top product-img">
+                <div class="card-body">
+                    <h4 class="card-title service-title">{{service.name}}</h4>
+                    <strong class="card-text" style="color:#0066cc">{{service.shortDescription}}</strong>
+                    <h5 class="price">{{formatPrice service.price}}</h5>
+
+                    <!-- Add to Cart Form -->
+                    <div class="mb-5">
+                        <strong class="text-primary">Select Quantity</strong>
+                        <form action="/cart/add/{{service._id}}" method="POST">
+                            <div class="d-flex align-items-center mb-2">
+                                <button type="button" class="btn btn-outline-primary js-btn-minus">&minus;</button>
+                                <input type="number" name="quantity" class="form-control text-center mx-2" value="1"
+                                    style="width:70px;">
+                                <button type="button" class="btn btn-outline-primary js-btn-plus">&plus;</button>
+                            </div>
+
+                            <!-- Line break achieved by putting button in separate block -->
+                            <p class="mt-2">
+                                <button type="submit" class="buy-now btn btn-sm height-auto px-4 py-3 btn-primary">Add To Cart</button>
+                            </p>
+                        </form>
+                    </div>
+
+
+                    {{#if service.introduction}}
+                    <h6 class="mt-3 text-primary">Introduction</h6>
+                    <p>{{service.introduction}}</p>
+                    {{/if}}
+
+                    {{#if service.uses}}
+                    <h6 class="mt-3 text-primary">Uses</h6>
+                    <p style="white-space: pre-line;">{{service.uses}}</p>
+                    {{/if}}
+
+                    {{#if service.benefits}}
+                    <h6 class="mt-3 text-primary">Benefits</h6>
+                    <p>{{service.benefits}}</p>
+                    {{/if}}
+
+                    {{#if service.sideEffects}}
+                    <h6 class="mt-3 text-primary">Side Effects</h6>
+                    <p style="white-space: pre-line;">{{service.sideEffects}}</p>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{>service}}
+{{>footer}}

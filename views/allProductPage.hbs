@@ -1,0 +1,27 @@
+{{>header}}
+<title>Advance Poly Pathic Pharmaceuticals Limited</title>
+{{>navbar}}
+{{>hero}}
+
+<!-- All Products Page -->
+<div class="container my-5">
+  <h2 class="text-center mb-4 text-primary">All Products</h2>
+  <div class="row">
+    {{#each services}}
+    <div class="col-md-4 mb-4">
+      <div class="service-item product-card">
+        <a href="/service/{{_id}}" class="service-img">
+          <img src="/{{pic}}" alt="Product Image" class="product-img" style="transition: transform 0.3s ease;">
+        </a>
+        <div class="rounded-bottom p-4 text-center">
+          <a href="/service/{{_id}}" class="h4 d-inline-block mb-3 service-title">{{name}}</a>
+          <p class="mb-3 product-desc">{{shortDescription}}</p>
+          <p class="mb-3 text-primary">{{formatPrice price}}</p>
+          <a class="btn btn-primary rounded-pill py-2 px-4" href="/service/{{_id}}">Learn More</a>
+        </div>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+</div>
+{{>footer}}

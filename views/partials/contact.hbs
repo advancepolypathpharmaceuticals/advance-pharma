@@ -1,0 +1,203 @@
+<!-- Contact Start -->
+<div class="container contact py-5">
+    <div class="row g-5 align-items-stretch">
+        <div class="col-xl-6 d-flex">
+            <div class="wow fadeInUp" data-wow-delay="0.2s">
+                <div class="bg-light rounded p-5 mb-5 w-100 h-100">
+                    <h4 class="text-primary mb-4">Get in Touch</h4>
+                    <p class="mb-4">We are here to assist you with any queries regarding our medicines and services.
+                        Feel free to contact us through the following channels:</p>
+                    <div class="row g-4">
+
+                        <!-- Address -->
+                        <div class="col-12">
+                            <div class="contact-add-item d-flex align-items mb-3">
+                                <div class="contact-icon text-primary me-3">
+                                    <i class="fas fa-map-marker-alt fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h4 class="mb-1">Our Office</h4>
+                                    <p class="mb-0">
+                                        <a
+                                            href="https://www.google.com/maps/place/Dr.+Mahesh+Sah+:+Best+Neuro+Hospital+in+Patna+:+Best+Orthopaedic+Surgery+in+Patna/@25.6204152,85.0429899,17z">
+                                            Advance Polypath Pharmaceuticals Near Mahavir Hitech Hospital, Bailey Road,
+                                            Saguna More, Vashi Kunj Apartment, Danapur, Patna, Bihar 801503
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mail -->
+                        <div class="col-12">
+                            <div class="contact-add-item d-flex align-items-start mb-3">
+                                <div class="contact-icon text-primary me-3">
+                                    <i class="fas fa-envelope fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h4 class="mb-1">Mail Us</h4>
+                                    <p class="mb-0">
+                                        <a
+                                            href="https://mail.google.com/mail/?view=cm&fs=1&to=advancepolypathpharmaceuticals@gmail.com">
+                                            advancepolypathpharmaceuticals@gmail.com
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="col-12">
+                            <div class="contact-add-item d-flex align-items-start mb-3">
+                                <div class="contact-icon text-primary me-3">
+                                    <i class="fa-solid fa-phone-volume fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h4 class="mb-1">Contact Number</h4>
+                                    <p class="mb-0">
+                                        <a href="tel:9199893278">9199893278</a>,
+                                        <a href="tel:7677413112">7677413112</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- WhatsApp -->
+                        <div class="col-12">
+                            <div class="contact-add-item d-flex align-items-start mb-3">
+                                <div class="contact-icon text-primary me-3">
+                                    <i class="fa-brands fa-whatsapp fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h4 class="mb-1">WhatsApp</h4>
+                                    <p class="mb-0">
+                                        <a href="https://wa.me/9199893278" target="_blank">9199893278</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Website -->
+                        <div class="col-12">
+                            <div class="contact-add-item d-flex align-items-start mb-3">
+                                <div class="contact-icon text-primary me-3">
+                                    <i class="fas fa-globe fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h4 class="mb-1">Website</h4>
+                                    <p class="mb-0">
+                                        <a href="https://advancepolypathpharmaceuticals.in" target="_blank">
+                                            advancepolypathpharmaceuticals.in
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 d-flex wow fadeInRight" data-wow-delay="0.2s">
+            <div class="bg-light p-5 rounded w-100 h-100 wow fadeInUp" data-wow-delay="0.2s">
+                <h4 class="text-primary">Send Your Message</h4>
+                <p class="mb-4">Have any questions or need assistance?
+                    Fill out the form below and our team will get back to you as soon as possible.</p>
+
+                {{#if show}}
+                <div class="alert alert-success mt-3" role="alert">
+                    <h5 class="fw-bold mb-2 text-success">🎉 Thank you for contacting us!</h5>
+                    <p>
+                        We truly appreciate you sharing your query with us.
+                        Our dedicated team will carefully review your message and reach out to you as soon as possible.
+                    </p>
+                    <p class="mb-0">
+                        Please keep an eye on your email or phone for updates.
+                        In the meantime, feel free to explore more about our medicines and services on our website.
+                        Your satisfaction is our priority!
+                    </p>
+                </div>
+                {{/if}}
+
+                <form action="/contact-us" method="post">
+                 <input type="hidden" name="recaptchaToken" id="registerRecaptchaToken">
+                    <div class="row g-4">
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <input type="text" name="name"
+                                    class="form-control border-2 {{#if errorMessage.name}}border-danger{{else}}border-primary{{/if}}"
+                                    id="name" placeholder="Your Name" value="{{data.name}}">
+                                {{#if errorMessage.name}}
+                                <p class="text-danger">{{errorMessage.name}}</p>
+                                {{/if}}
+                                <label for="name">Please Enter Your Full Name</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <input type="email" name="email"
+                                    class="form-control border-2 {{#if errorMessage.email}}border-danger{{else}}border-primary{{/if}}"
+                                    id="email" placeholder="Your Email" value="{{data.email}}">
+                                {{#if errorMessage.email}}
+                                <p class="text-danger">{{errorMessage.email}}</p>
+                                {{/if}}
+                                <label for="email">Please Enter Your Email</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <input type="phone" name="phone"
+                                    class="form-control border-2 {{#if errorMessage.phone}}border-danger{{else}}border-primary{{/if}}"
+                                    id="phone" placeholder="Phone" value="{{data.phone}}">
+                                {{#if errorMessage.phone}}
+                                <p class="text-danger">{{errorMessage.phone}}</p>
+                                {{/if}}
+                                <label for="phone">Please Enter Your Phone</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <input type="text" name="subject"
+                                    class="form-control border-2 {{#if errorMessage.subject}}border-danger{{else}}border-primary{{/if}}"
+                                    id="subject" placeholder="Subject" value="{{data.subject}}">
+                                {{#if errorMessage.subject}}
+                                <p class="text-danger">{{errorMessage.subject}}</p>
+                                {{/if}}
+                                <label for="subject">Please Enter Subject</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <textarea name="message"
+                                    class="form-control border-2 {{#if errorMessage.message}}border-danger{{else}}border-primary{{/if}}"
+                                    placeholder="Leave a message here" id="message" value="{{data.message}}"></textarea>
+                                {{#if errorMessage.message}}
+                                <p class="text-danger">{{errorMessage.message}}</p>
+                                {{/if}}
+                                <label for="message">Please Write Your Message</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <button class="btn btn-primary w-100 py-3">Send Message</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+
+    </div>
+    <div class="location">
+        <div class="rounded h-100">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d885.5612601324949!2d85.04298994705825!3d25.620415221003842!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ed57a0bad36883%3A0x7721eb3962220e84!2sDr.%20Mahesh%20Sah%20%3A%20Best%20Neuro%20Hospital%20in%20Patna%20%3A%20Best%20Orthopaedic%20Surgery%20in%20Patna!5e0!3m2!1sen!2sin!4v1757471629022!5m2!1sen!2sin"
+                width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </div>
+</div>
+<!-- Contact End -->
+
+<script>
+attachRecaptcha("contactForm","contact");
+</script>

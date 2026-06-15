@@ -1,0 +1,854 @@
+{{>header}}
+<title>Advance Poly Pathic Pharmaceuticals Limited</title>
+{{>navbar}}
+{{>hero}}
+
+<style>
+    /* === Your Existing CSS (unchanged) === */
+    .login-container {
+        background: linear-gradient(135deg, #e8f8f3 0%, #d1f2eb 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 500px;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .form-tabs {
+        display: flex;
+        background: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .tab-btn {
+        flex: 1;
+        padding: 15px;
+        background: none;
+        border: none;
+        font-size: 18px;
+        font-weight: 600;
+        color: #6c757d;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .tab-btn.active {
+        color: #00d084;
+        background: #fff;
+        border-bottom: 3px solid #00d084;
+    }
+
+    .form-content {
+        padding: 40px 30px;
+    }
+
+    .form-panel {
+        display: none;
+    }
+
+    .form-panel.active {
+        display: block;
+    }
+
+    .form-input {
+        width: 100%;
+        height: 50px;
+        padding: 12px 15px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 16px;
+        background: #f8f9fa;
+        transition: all 0.3s ease;
+    }
+
+    .form-input.error {
+        border-color: #dc3545;
+        background: #fff5f5;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: #00d084;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(0, 208, 132, 0.1);
+    }
+
+    .form-btn {
+        width: 100%;
+        height: 50px;
+        background: #00d084;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+    }
+
+    .form-btn:hover {
+        background: #00b874;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 208, 132, 0.3);
+    }
+
+    .forgot-password {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .forgot-password a {
+        color: #00d084;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .forgot-password a:hover {
+        text-decoration: underline;
+    }
+
+    .field-error {
+        color: #dc3545;
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+    }
+
+    .form-title {
+        text-align: center;
+        color: #00d084;
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 30px;
+    }
+
+    .logo-section {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .logo-section img {
+        width: 72px;
+        height: 72px;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+
+    .navbar,
+    .hero {
+        display: none;
+    }
+
+    /* Profile Picture Upload Styles */
+    .profile-pic-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .profile-pic-preview {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #e9ecef;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .profile-pic-preview:hover {
+        border-color: #00d084;
+    }
+
+    .profile-upload-text {
+        margin-top: 10px;
+        font-size: 12px;
+        color: #6c757d;
+    }
+
+    .file-input {
+        display: none;
+    }
+
+    /* Success Alert Styles */
+    .alert-success {
+        background: #d1edff;
+        color: #155724;
+        border-left: 4px solid #00d084;
+        border-radius: 8px;
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-card">
+        <!-- Alerts (unchanged) -->
+        {{#if (eq query.error 'invalid_credentials')}}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            Invalid username or password. Please try again.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {{/if}}
+
+        {{#if (eq query.error 'login_failed')}}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            Login failed. Please try again.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {{/if}}
+
+        <!-- Tabs -->
+        <div class="form-tabs">
+            <button class="tab-btn active" data-tab="login">Login</button>
+            <button class="tab-btn" data-tab="register">Register</button>
+        </div>
+
+        <!-- === Login Panel === -->
+        <div class="form-content">
+            <div class="form-panel active" id="login-panel">
+                <div class="logo-section"><img src="/img/Logo.jpg" alt="Company Logo" class="mb-3"></div>
+                <div class="form-title">Login to Your Account</div>
+
+                <form id="loginForm" action="/login" method="post">
+                    <input type="hidden" name="recaptchaToken" id="loginRecaptchaToken">
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <input type="text" name="username" id="username"
+                                class="form-control border-2 border-primary form-input"
+                                placeholder="Username or Email Address">
+                            <label for="username">Username or Email Address</label>
+                        </div>
+                        <span class="field-error" id="username-error"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <input type="password" name="password" id="password"
+                                class="form-control border-2 border-primary form-input" placeholder="Password">
+                            <label for="password">Password</label>
+                        </div>
+                        <span class="field-error" id="password-error"></span>
+                    </div>
+
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="form-btn">Sign in</button>
+                    </div>
+
+                    <div class="forgot-password"><a href="/forget-password-1">Forgot Password?</a></div>
+                </form>
+            </div>
+
+            <!-- === Register Panel === -->
+            <div class="form-panel" id="register-panel">
+                <div class="logo-section"><img src="/img/Logo.jpg" alt="Company Logo" class="mb-3"></div>
+                <div class="form-title">Create New Account</div>
+
+                <!-- Registration Success Message -->
+                {{#if (eq query.success 'true')}}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <strong>Success!</strong> Your account has been created successfully. You can now login.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {{/if}}
+
+                <!-- Registration Error Messages -->
+                {{#if (eq query.error 'password_mismatch')}}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Password and confirm password do not match.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {{/if}}
+
+                {{#if (eq query.error 'user_exists')}}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    An account with this email already exists.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {{/if}}
+
+                {{#if (eq query.error 'registration_failed')}}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    Registration failed. Please try again.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {{/if}}
+
+                <form id="registerForm" action="/register" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="recaptchaToken" id="registerAdminRecaptchaToken">
+                    <!-- Profile Picture Upload -->
+                    <div class="profile-pic-container">
+                        <img id="registerProfilePreview" src="/img/default-profile.png" class="profile-pic-preview"
+                            onclick="document.getElementById('registerPic').click()" alt="Profile Preview">
+                        <input type="file" id="registerPic" name="pic" class="file-input" accept="image/*"
+                            onchange="previewRegisterImage(this)">
+                        <div class="profile-upload-text">
+                            Click to upload profile picture (Optional)<br>
+                            <small>JPEG, PNG, GIF, WebP - Max 2MB</small>
+                        </div>
+                        <span class="field-error" id="register-pic-error"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <div class="form-floating">
+                                    <input type="text" name="firstName" id="reg-firstName"
+                                        class="form-control border-2 border-primary form-input" placeholder="First Name"
+                                        value="{{data.firstName}}">
+                                    <label for="reg-firstName">First Name</label>
+                                </div>
+                                <span class="field-error" id="firstName-error"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <div class="form-floating">
+                                    <input type="text" name="lastName" id="reg-lastName"
+                                        class="form-control border-2 border-primary form-input" placeholder="Last Name"
+                                        value="{{data.lastName}}">
+                                    <label for="reg-lastName">Last Name</label>
+                                </div>
+                                <span class="field-error" id="lastName-error"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <input type="email" name="email" id="reg-email"
+                                class="form-control border-2 border-primary form-input" placeholder="Email"
+                                value="{{data.email}}">
+                            <label for="reg-email">Email Address</label>
+                        </div>
+                        <span class="field-error" id="email-error"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <input type="tel" name="phone" id="reg-phone"
+                                class="form-control border-2 border-primary form-input" placeholder="Phone Number"
+                                value="{{data.phone}}">
+                            <label for="reg-phone">Phone Number</label>
+                        </div>
+                        <span class="field-error" id="phone-error"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <input type="password" name="password" id="reg-password"
+                                class="form-control border-2 border-primary form-input" placeholder="Password">
+                            <label for="reg-password">Password</label>
+                        </div>
+                        <span class="field-error" id="reg-password-error"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <input type="password" name="confirmPassword" id="reg-confirm-password"
+                                class="form-control border-2 border-primary form-input" placeholder="Confirm Password">
+                            <label for="reg-confirm-password">Confirm Password</label>
+                        </div>
+                        <span class="field-error" id="confirm-password-error"></span>
+                    </div>
+
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="form-btn">Create Account</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log("✅ Login/Register script loaded");
+
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const formPanels = document.querySelectorAll('.form-panel');
+
+        // Define globally accessible tab switcher
+        window.switchToTab = function (tabName) {
+            console.log('Switching to tab:', tabName);
+
+            // Update tab buttons
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+            // Update form panels
+            formPanels.forEach(panel => panel.classList.remove('active'));
+            document.getElementById(`${tabName}-panel`).classList.add('active');
+
+            // Update URL without page reload
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.set('tab', tabName);
+            window.history.replaceState({}, '', newUrl);
+
+            // Auto-focus first input
+            setTimeout(() => {
+                const firstInput = document.querySelector(`#${tabName}-panel .form-input`);
+                if (firstInput) firstInput.focus();
+            }, 100);
+        };
+
+        // Attach click listeners to tab buttons
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const targetTab = this.getAttribute('data-tab');
+                switchToTab(targetTab);
+            });
+        });
+
+        // Handle URL parameters and initial tab state
+        const params = new URLSearchParams(window.location.search);
+        const tabParam = params.get('tab');
+        const errorParam = params.get('error');
+        const successParam = params.get('success');
+
+        // Handle registration success
+        if (successParam === 'true') {
+            switchToTab('login');
+
+            // Show success message in login panel
+            setTimeout(() => {
+                const loginPanel = document.getElementById('login-panel');
+                const existingAlert = loginPanel.querySelector('.alert');
+                if (existingAlert) existingAlert.remove();
+
+                const successAlert = document.createElement('div');
+                successAlert.className = 'alert alert-success alert-dismissible fade show';
+                successAlert.innerHTML = `
+                <i class="fas fa-check-circle me-2"></i>
+                <strong>Success!</strong> Your account has been created successfully. Please login.
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+                loginPanel.insertBefore(successAlert, loginPanel.querySelector('form'));
+
+                // Auto-remove success message after 8 seconds
+                setTimeout(() => {
+                    if (successAlert.parentNode) {
+                        successAlert.remove();
+                    }
+                }, 8000);
+            }, 300);
+        }
+        // Handle registration errors
+        else if (errorParam && ['password_mismatch', 'user_exists', 'registration_failed'].includes(errorParam)) {
+            switchToTab('register');
+
+            // Auto-remove error messages after 8 seconds
+            setTimeout(() => {
+                const alerts = document.querySelectorAll('.alert-danger');
+                alerts.forEach(alert => {
+                    const closeBtn = alert.querySelector('.btn-close');
+                    if (closeBtn) closeBtn.click();
+                });
+            }, 8000);
+        }
+        // Handle explicit tab parameter
+        else if (tabParam === 'register') {
+            switchToTab('register');
+        }
+        // Default to login tab
+        else {
+            switchToTab('login');
+        }
+
+        // Form validation functions
+        function validateField(value, fieldName) {
+            if (!value || value.trim() === '') {
+                return `${fieldName} is required`;
+            }
+            return '';
+        }
+
+        function validateEmail(email) {
+            if (!email || email.trim() === '') {
+                return 'Email is required';
+            }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                return 'Please enter a valid email address';
+            }
+            return '';
+        }
+
+        function validatePhone(phone) {
+            if (!phone || phone.trim() === '') {
+                return 'Phone number is required';
+            }
+            const cleanPhone = phone.replace(/\D/g, '');
+            if (cleanPhone.length !== 10) {
+                return 'Phone number must be 10 digits';
+            }
+            return '';
+        }
+
+        function validatePassword(password) {
+            if (!password || password.trim() === '') {
+                return 'Password is required';
+            }
+            if (password.length < 6) {
+                return 'Password must be at least 6 characters';
+            }
+            return '';
+        }
+
+        function validateConfirmPassword(password, confirmPassword) {
+            if (!confirmPassword || confirmPassword.trim() === '') {
+                return 'Please confirm your password';
+            }
+            if (password !== confirmPassword) {
+                return 'Passwords do not match';
+            }
+            return '';
+        }
+
+        function showError(fieldId, message) {
+            const errorElement = document.getElementById(fieldId);
+            const inputElement = document.getElementById(fieldId.replace('-error', ''));
+
+            if (errorElement && inputElement) {
+                errorElement.textContent = message;
+                inputElement.classList.add('error');
+            }
+        }
+
+        function clearError(fieldId) {
+            const errorElement = document.getElementById(fieldId);
+            const inputElement = document.getElementById(fieldId.replace('-error', ''));
+
+            if (errorElement && inputElement) {
+                errorElement.textContent = '';
+                inputElement.classList.remove('error');
+            }
+        }
+
+        function clearAllErrors() {
+            const errorElements = document.querySelectorAll('.field-error');
+            const inputElements = document.querySelectorAll('.form-input');
+
+            errorElements.forEach(element => {
+                element.textContent = '';
+            });
+
+            inputElements.forEach(element => {
+                element.classList.remove('error');
+            });
+        }
+
+        // Login Form Validation
+        const loginForm = document.getElementById('loginForm');
+        if (loginForm) {
+            loginForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                clearAllErrors();
+
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+
+                let hasError = false;
+
+                // Validate username
+                const usernameError = validateField(username, 'Username or email');
+                if (usernameError) {
+                    showError('username-error', usernameError);
+                    hasError = true;
+                }
+
+                // Validate password
+                const passwordError = validatePassword(password);
+                if (passwordError) {
+                    showError('password-error', passwordError);
+                    hasError = true;
+                }
+
+                console.log('Login form validation - hasError:', hasError);
+
+                if (!hasError) {
+
+                    console.log('Login validation passed');
+
+                    grecaptcha.ready(function () {
+
+                        grecaptcha.execute(
+                            '6LcmCQ4tAAAAAEFDRP4OBVuOIptLKJkUUmKpBtmL',
+                            { action: 'login' }
+                        ).then(function (token) {
+
+                            document.getElementById("loginRecaptchaToken").value = token;
+
+                            loginForm.submit();
+
+                        });
+
+                    });
+
+                }
+            });
+        }
+
+        // Register Form Validation
+        const registerForm = document.getElementById('registerForm');
+        if (registerForm) {
+            registerForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                clearAllErrors();
+
+                const firstName = document.getElementById('reg-firstName').value;
+                const lastName = document.getElementById('reg-lastName').value;
+                const email = document.getElementById('reg-email').value;
+                const phone = document.getElementById('reg-phone').value;
+                const password = document.getElementById('reg-password').value;
+                const confirmPassword = document.getElementById('reg-confirm-password').value;
+
+                let hasError = false;
+
+                // Validate firstName
+                const firstNameError = validateField(firstName, 'First name');
+                if (firstNameError) {
+                    showError('firstName-error', firstNameError);
+                    hasError = true;
+                }
+
+                // Validate lastName
+                const lastNameError = validateField(lastName, 'Last name');
+                if (lastNameError) {
+                    showError('lastName-error', lastNameError);
+                    hasError = true;
+                }
+
+                // Validate email
+                const emailError = validateEmail(email);
+                if (emailError) {
+                    showError('email-error', emailError);
+                    hasError = true;
+                }
+
+                // Validate phone
+                const phoneError = validatePhone(phone);
+                if (phoneError) {
+                    showError('phone-error', phoneError);
+                    hasError = true;
+                }
+
+                // Validate password
+                const passwordError = validatePassword(password);
+                if (passwordError) {
+                    showError('reg-password-error', passwordError);
+                    hasError = true;
+                }
+
+                // Validate confirm password
+                const confirmPasswordError = validateConfirmPassword(password, confirmPassword);
+                if (confirmPasswordError) {
+                    showError('confirm-password-error', confirmPasswordError);
+                    hasError = true;
+                }
+
+                console.log('Register form validation - hasError:', hasError);
+
+                if (!hasError) {
+                    console.log('Submitting registration form...');
+                    this.submit();
+                }
+            });
+        }
+
+        // Real-time validation for login form
+        if (loginForm) {
+            const loginInputs = loginForm.querySelectorAll('.form-input');
+            loginInputs.forEach(input => {
+                input.addEventListener('blur', function () {
+                    const fieldId = this.id;
+                    const value = this.value;
+
+                    if (fieldId === 'username') {
+                        const error = validateField(value, 'Username or email');
+                        if (error) {
+                            showError('username-error', error);
+                        } else {
+                            clearError('username-error');
+                        }
+                    }
+                    else if (fieldId === 'password') {
+                        const error = validatePassword(value);
+                        if (error) {
+                            showError('password-error', error);
+                        } else {
+                            clearError('password-error');
+                        }
+                    }
+                });
+
+                input.addEventListener('input', function () {
+                    const fieldId = this.id;
+                    if (fieldId === 'username') {
+                        clearError('username-error');
+                    } else if (fieldId === 'password') {
+                        clearError('password-error');
+                    }
+                });
+            });
+        }
+
+        // Real-time validation for register form
+        if (registerForm) {
+            const registerInputs = registerForm.querySelectorAll('.form-input');
+            registerInputs.forEach(input => {
+                input.addEventListener('blur', function () {
+                    const fieldId = this.id;
+                    const value = this.value;
+
+                    if (fieldId === 'reg-firstName') {
+                        const error = validateField(value, 'First name');
+                        if (error) {
+                            showError('firstName-error', error);
+                        } else {
+                            clearError('firstName-error');
+                        }
+                    }
+                    else if (fieldId === 'reg-lastName') {
+                        const error = validateField(value, 'Last name');
+                        if (error) {
+                            showError('lastName-error', error);
+                        } else {
+                            clearError('lastName-error');
+                        }
+                    }
+                    else if (fieldId === 'reg-email') {
+                        const error = validateEmail(value);
+                        if (error) {
+                            showError('email-error', error);
+                        } else {
+                            clearError('email-error');
+                        }
+                    }
+                    else if (fieldId === 'reg-phone') {
+                        const error = validatePhone(value);
+                        if (error) {
+                            showError('phone-error', error);
+                        } else {
+                            clearError('phone-error');
+                        }
+                    }
+                    else if (fieldId === 'reg-password') {
+                        const error = validatePassword(value);
+                        if (error) {
+                            showError('reg-password-error', error);
+                        } else {
+                            clearError('reg-password-error');
+                        }
+                    }
+                    else if (fieldId === 'reg-confirm-password') {
+                        const password = document.getElementById('reg-password').value;
+                        const error = validateConfirmPassword(password, value);
+                        if (error) {
+                            showError('confirm-password-error', error);
+                        } else {
+                            clearError('confirm-password-error');
+                        }
+                    }
+                });
+
+                input.addEventListener('input', function () {
+                    const fieldId = this.id;
+                    if (fieldId === 'reg-firstName') {
+                        clearError('firstName-error');
+                    } else if (fieldId === 'reg-lastName') {
+                        clearError('lastName-error');
+                    } else if (fieldId === 'reg-email') {
+                        clearError('email-error');
+                    } else if (fieldId === 'reg-phone') {
+                        clearError('phone-error');
+                    } else if (fieldId === 'reg-password') {
+                        clearError('reg-password-error');
+                    } else if (fieldId === 'reg-confirm-password') {
+                        clearError('confirm-password-error');
+                    }
+                });
+            });
+        }
+
+        // Phone number formatting for register form
+        const phoneInput = document.getElementById('reg-phone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function (e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 10) {
+                    value = value.substring(0, 10);
+                }
+                e.target.value = value;
+            });
+        }
+
+        // Auto-remove alert messages after 8 seconds
+        setTimeout(() => {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                const closeBtn = alert.querySelector('.btn-close');
+                if (closeBtn) closeBtn.click();
+            });
+        }, 8000);
+
+        // Close button functionality for alerts
+        document.querySelectorAll('.btn-close').forEach(btn => {
+            btn.addEventListener('click', function () {
+                this.closest('.alert').remove();
+            });
+        });
+    });
+
+    // Profile picture preview for registration form
+    function previewRegisterImage(input) {
+        const preview = document.getElementById('registerProfilePreview');
+        const file = input.files[0];
+
+        if (file) {
+            // Validate file type
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+            if (!allowedTypes.includes(file.type)) {
+                document.getElementById('register-pic-error').textContent = 'Please select a valid image file (JPEG, PNG, GIF, WebP)';
+                input.value = '';
+                return;
+            }
+
+            // Validate file size (2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                document.getElementById('register-pic-error').textContent = 'Image size must be less than 2MB';
+                input.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                document.getElementById('register-pic-error').textContent = '';
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+
+<script>
+attachRecaptcha("registerForm", "register");
+</script>
+
+{{>footer}}

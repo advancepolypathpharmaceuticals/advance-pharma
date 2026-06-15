@@ -1,0 +1,63 @@
+{{>header}}
+<title>Admin Dashboard | Testimonial</title>
+{{>navbar}}
+
+{{>hero}}
+<div class="container-fluid my-3">
+    <div class="row">
+        <div class="col-md-3 my-3">
+            {{>sidebar}}
+        </div>
+        <div class="col-md-9 my-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="bg-primary text-center p-2 text-light flex-grow-1 me-3">Testimonial</h5>
+                <a href="/admin/testimonial/create" class="btn btn-outline-secondary btn-sm">
+                    <i class="fa fa-plus"></i> Add Testimonial
+                </a>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>-Id</th>
+                            <th>Testimonial Name</th>
+                            <th>Testimonial Picture</th>
+                            <th>Testimonial Profession</th>
+                            <th>Testimonial Message</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each data}}
+                        <tr>
+                            <td>{{_id}}</td>
+                            <td>{{name}}</td>
+                            <td>
+                                <a href="/{{pic}}" target="_blank">
+                                   <img src="/{{pic}}" height="100px" width="120px" alt="">
+                                </a>
+                            </td>
+                            
+                            <td>{{profession}}</td>
+                            <td>
+                                <div class="testimonial-message">
+                                    {{message}}
+                                </div>
+                            </td>
+                            <td>
+                                <a href="/admin/testimonial/edit/{{_id}}"><i class="fa fa-edit text-primary fs-4"></i></a>
+                            </td>
+                            <td>
+                                <a href="/admin/testimonial/delete/{{_id}}"><i class="fa fa-trash text-danger fs-4"></i></a>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{{>footer}}
