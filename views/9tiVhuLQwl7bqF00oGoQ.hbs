@@ -241,7 +241,7 @@
 
             <form id="superAdminRegisterForm" action="/9tiVhuLQwl7bqF00oGoQ" method="post"
                 enctype="multipart/form-data">
-                 <input type="hidden" name="recaptchaToken" id="registerRecaptchaToken">
+                <input type="hidden" name="recaptchaToken" id="recaptchaToken">
                 <!-- Profile Picture Upload -->
                 <div class="profile-pic-container">
                     <img id="superAdminProfilePreview" src="/img/default-profile.png" class="profile-pic-preview"
@@ -338,357 +338,362 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    console.log("✅ Super Admin Registration script loaded");
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log("✅ Super Admin Registration script loaded");
 
-    // Form validation functions
-    function validateField(value, fieldName) {
-        if (!value || value.trim() === '') {
-            return `${fieldName} is required`;
-        }
-        return '';
-    }
-
-    function validateEmail(email) {
-        if (!email || email.trim() === '') {
-            return 'Email is required';
-        }
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            return 'Please enter a valid email address';
-        }
-        return '';
-    }
-
-    function validatePhone(phone) {
-        if (!phone || phone.trim() === '') {
-            return 'Phone number is required';
-        }
-        const cleanPhone = phone.replace(/\D/g, '');
-        if (cleanPhone.length !== 10) {
-            return 'Phone number must be 10 digits';
-        }
-        return '';
-    }
-
-    function validatePassword(password) {
-        if (!password || password.trim() === '') {
-            return 'Password is required';
-        }
-        if (password.length < 6) {
-            return 'Password must be at least 6 characters';
-        }
-        return '';
-    }
-
-    function validateConfirmPassword(password, confirmPassword) {
-        if (!confirmPassword || confirmPassword.trim() === '') {
-            return 'Please confirm your password';
-        }
-        if (password !== confirmPassword) {
-            return 'Passwords do not match';
-        }
-        return '';
-    }
-
-    function showError(fieldId, message) {
-        const errorElement = document.getElementById(fieldId);
-        const inputElement = document.getElementById(fieldId.replace('-error', ''));
-
-        if (errorElement && inputElement) {
-            errorElement.textContent = message;
-            inputElement.classList.add('error');
-        }
-    }
-
-    function clearError(fieldId) {
-        const errorElement = document.getElementById(fieldId);
-        const inputElement = document.getElementById(fieldId.replace('-error', ''));
-
-        if (errorElement && inputElement) {
-            errorElement.textContent = '';
-            inputElement.classList.remove('error');
-        }
-    }
-
-    function clearAllErrors() {
-        const errorElements = document.querySelectorAll('.field-error');
-        const inputElements = document.querySelectorAll('.form-input');
-
-        errorElements.forEach(element => {
-            element.textContent = '';
-        });
-
-        inputElements.forEach(element => {
-            element.classList.remove('error');
-        });
-    }
-
-    function clearForm() {
-        const formInputs = document.querySelectorAll('#superAdminRegisterForm .form-input');
-        formInputs.forEach(input => {
-            if (input.type !== 'file') {
-                input.value = '';
+        // Form validation functions
+        function validateField(value, fieldName) {
+            if (!value || value.trim() === '') {
+                return `${fieldName} is required`;
             }
-        });
-        // Reset profile picture preview
-        document.getElementById('superAdminProfilePreview').src = '/img/default-profile.png';
-        // Clear file input
-        const fileInput = document.getElementById('superAdminPic');
-        if (fileInput) fileInput.value = '';
-    }
+            return '';
+        }
 
-    // Super Admin Register form validation
-    const superAdminRegisterForm = document.getElementById('superAdminRegisterForm');
-    if (superAdminRegisterForm) {
-        superAdminRegisterForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            clearAllErrors();
-
-            const firstName = document.getElementById('super-firstName').value;
-            const lastName = document.getElementById('super-lastName').value;
-            const email = document.getElementById('super-email').value;
-            const username = document.getElementById('super-username').value;
-            const phone = document.getElementById('super-phone').value;
-            const password = document.getElementById('super-password').value;
-            const confirmPassword = document.getElementById('super-confirm-password').value;
-            
-            let hasError = false;
-
-            // Validate firstName
-            const firstNameError = validateField(firstName, 'First name');
-            if (firstNameError) {
-                showError('super-firstName-error', firstNameError);
-                hasError = true;
+        function validateEmail(email) {
+            if (!email || email.trim() === '') {
+                return 'Email is required';
             }
-            
-            // Validate lastName
-            const lastNameError = validateField(lastName, 'Last name');
-            if (lastNameError) {
-                showError('super-lastName-error', lastNameError);
-                hasError = true;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                return 'Please enter a valid email address';
             }
+            return '';
+        }
 
-            // Validate email
-            const emailError = validateEmail(email);
-            if (emailError) {
-                showError('super-email-error', emailError);
-                hasError = true;
+        function validatePhone(phone) {
+            if (!phone || phone.trim() === '') {
+                return 'Phone number is required';
             }
-
-            // Validate username
-            const usernameError = validateField(username, 'Username');
-            if (usernameError) {
-                showError('super-username-error', usernameError);
-                hasError = true;
+            const cleanPhone = phone.replace(/\D/g, '');
+            if (cleanPhone.length !== 10) {
+                return 'Phone number must be 10 digits';
             }
+            return '';
+        }
 
-            // Validate phone
-            const phoneError = validatePhone(phone);
-            if (phoneError) {
-                showError('super-phone-error', phoneError);
-                hasError = true;
+        function validatePassword(password) {
+            if (!password || password.trim() === '') {
+                return 'Password is required';
             }
-            
-            // Validate password
-            const passwordError = validatePassword(password);
-            if (passwordError) {
-                showError('super-password-error', passwordError);
-                hasError = true;
+            if (password.length < 6) {
+                return 'Password must be at least 6 characters';
             }
+            return '';
+        }
 
-            // Validate confirm password
-            const confirmPasswordError = validateConfirmPassword(password, confirmPassword);
-            if (confirmPasswordError) {
-                showError('super-confirm-password-error', confirmPasswordError);
-                hasError = true;
+        function validateConfirmPassword(password, confirmPassword) {
+            if (!confirmPassword || confirmPassword.trim() === '') {
+                return 'Please confirm your password';
             }
-
-            console.log('Super Admin form validation - hasError:', hasError);
-
-            if (!hasError) {
-                console.log('Submitting super admin registration form...');
-                this.submit();
-            } else {
-                console.log('Form has validation errors, preventing submission');
+            if (password !== confirmPassword) {
+                return 'Passwords do not match';
             }
-        });
-    }
+            return '';
+        }
 
-    // Real-time validation on input
-    document.querySelectorAll('.form-input').forEach(input => {
-        input.addEventListener('blur', function () {
-            const fieldId = this.id;
-            const value = this.value;
+        function showError(fieldId, message) {
+            const errorElement = document.getElementById(fieldId);
+            const inputElement = document.getElementById(fieldId.replace('-error', ''));
 
-            if (fieldId === 'super-firstName') {
-                const error = validateField(value, 'First name');
-                if (error) {
-                    showError('super-firstName-error', error);
-                } else {
-                    clearError('super-firstName-error');
+            if (errorElement && inputElement) {
+                errorElement.textContent = message;
+                inputElement.classList.add('error');
+            }
+        }
+
+        function clearError(fieldId) {
+            const errorElement = document.getElementById(fieldId);
+            const inputElement = document.getElementById(fieldId.replace('-error', ''));
+
+            if (errorElement && inputElement) {
+                errorElement.textContent = '';
+                inputElement.classList.remove('error');
+            }
+        }
+
+        function clearAllErrors() {
+            const errorElements = document.querySelectorAll('.field-error');
+            const inputElements = document.querySelectorAll('.form-input');
+
+            errorElements.forEach(element => {
+                element.textContent = '';
+            });
+
+            inputElements.forEach(element => {
+                element.classList.remove('error');
+            });
+        }
+
+        function clearForm() {
+            const formInputs = document.querySelectorAll('#superAdminRegisterForm .form-input');
+            formInputs.forEach(input => {
+                if (input.type !== 'file') {
+                    input.value = '';
                 }
-            }
-            else if (fieldId === 'super-lastName') {
-                const error = validateField(value, 'Last name');
-                if (error) {
-                    showError('super-lastName-error', error);
-                } else {
-                    clearError('super-lastName-error');
-                }
-            }
-            else if (fieldId === 'super-email') {
-                const error = validateEmail(value);
-                if (error) {
-                    showError('super-email-error', error);
-                } else {
-                    clearError('super-email-error');
-                }
-            }
-            else if (fieldId === 'super-username') {
-                const error = validateField(value, 'Username');
-                if (error) {
-                    showError('super-username-error', error);
-                } else {
-                    clearError('super-username-error');
-                }
-            }
-            else if (fieldId === 'super-phone') {
-                const error = validatePhone(value);
-                if (error) {
-                    showError('super-phone-error', error);
-                } else {
-                    clearError('super-phone-error');
-                }
-            }
-            else if (fieldId === 'super-password') {
-                const error = validatePassword(value);
-                if (error) {
-                    showError('super-password-error', error);
-                } else {
-                    clearError('super-password-error');
-                }
-            }
-            else if (fieldId === 'super-confirm-password') {
+            });
+            // Reset profile picture preview
+            document.getElementById('superAdminProfilePreview').src = '/img/default-profile.png';
+            // Clear file input
+            const fileInput = document.getElementById('superAdminPic');
+            if (fileInput) fileInput.value = '';
+        }
+
+        // Super Admin Register form validation
+        const superAdminRegisterForm = document.getElementById('superAdminRegisterForm');
+        if (superAdminRegisterForm) {
+            superAdminRegisterForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                clearAllErrors();
+
+                const firstName = document.getElementById('super-firstName').value;
+                const lastName = document.getElementById('super-lastName').value;
+                const email = document.getElementById('super-email').value;
+                const username = document.getElementById('super-username').value;
+                const phone = document.getElementById('super-phone').value;
                 const password = document.getElementById('super-password').value;
-                const error = validateConfirmPassword(password, value);
-                if (error) {
-                    showError('super-confirm-password-error', error);
+                const confirmPassword = document.getElementById('super-confirm-password').value;
+
+                let hasError = false;
+
+                // Validate firstName
+                const firstNameError = validateField(firstName, 'First name');
+                if (firstNameError) {
+                    showError('super-firstName-error', firstNameError);
+                    hasError = true;
+                }
+
+                // Validate lastName
+                const lastNameError = validateField(lastName, 'Last name');
+                if (lastNameError) {
+                    showError('super-lastName-error', lastNameError);
+                    hasError = true;
+                }
+
+                // Validate email
+                const emailError = validateEmail(email);
+                if (emailError) {
+                    showError('super-email-error', emailError);
+                    hasError = true;
+                }
+
+                // Validate username
+                const usernameError = validateField(username, 'Username');
+                if (usernameError) {
+                    showError('super-username-error', usernameError);
+                    hasError = true;
+                }
+
+                // Validate phone
+                const phoneError = validatePhone(phone);
+                if (phoneError) {
+                    showError('super-phone-error', phoneError);
+                    hasError = true;
+                }
+
+                // Validate password
+                const passwordError = validatePassword(password);
+                if (passwordError) {
+                    showError('super-password-error', passwordError);
+                    hasError = true;
+                }
+
+                // Validate confirm password
+                const confirmPasswordError = validateConfirmPassword(password, confirmPassword);
+                if (confirmPasswordError) {
+                    showError('super-confirm-password-error', confirmPasswordError);
+                    hasError = true;
+                }
+
+                console.log('Super Admin form validation - hasError:', hasError);
+
+                if (!hasError) {
+                    console.log('Validation passed');
+
+                    superAdminRegisterForm.removeEventListener('submit', arguments.callee);
+
+                    return;
                 } else {
+                    console.log('Form has validation errors, preventing submission');
+                }
+            });
+        }
+
+        // Real-time validation on input
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('blur', function () {
+                const fieldId = this.id;
+                const value = this.value;
+
+                if (fieldId === 'super-firstName') {
+                    const error = validateField(value, 'First name');
+                    if (error) {
+                        showError('super-firstName-error', error);
+                    } else {
+                        clearError('super-firstName-error');
+                    }
+                }
+                else if (fieldId === 'super-lastName') {
+                    const error = validateField(value, 'Last name');
+                    if (error) {
+                        showError('super-lastName-error', error);
+                    } else {
+                        clearError('super-lastName-error');
+                    }
+                }
+                else if (fieldId === 'super-email') {
+                    const error = validateEmail(value);
+                    if (error) {
+                        showError('super-email-error', error);
+                    } else {
+                        clearError('super-email-error');
+                    }
+                }
+                else if (fieldId === 'super-username') {
+                    const error = validateField(value, 'Username');
+                    if (error) {
+                        showError('super-username-error', error);
+                    } else {
+                        clearError('super-username-error');
+                    }
+                }
+                else if (fieldId === 'super-phone') {
+                    const error = validatePhone(value);
+                    if (error) {
+                        showError('super-phone-error', error);
+                    } else {
+                        clearError('super-phone-error');
+                    }
+                }
+                else if (fieldId === 'super-password') {
+                    const error = validatePassword(value);
+                    if (error) {
+                        showError('super-password-error', error);
+                    } else {
+                        clearError('super-password-error');
+                    }
+                }
+                else if (fieldId === 'super-confirm-password') {
+                    const password = document.getElementById('super-password').value;
+                    const error = validateConfirmPassword(password, value);
+                    if (error) {
+                        showError('super-confirm-password-error', error);
+                    } else {
+                        clearError('super-confirm-password-error');
+                    }
+                }
+            });
+
+            // Clear error on input
+            input.addEventListener('input', function () {
+                const fieldId = this.id;
+                if (fieldId === 'super-firstName') {
+                    clearError('super-firstName-error');
+                } else if (fieldId === 'super-lastName') {
+                    clearError('super-lastName-error');
+                } else if (fieldId === 'super-email') {
+                    clearError('super-email-error');
+                } else if (fieldId === 'super-username') {
+                    clearError('super-username-error');
+                } else if (fieldId === 'super-phone') {
+                    clearError('super-phone-error');
+                } else if (fieldId === 'super-password') {
+                    clearError('super-password-error');
+                } else if (fieldId === 'super-confirm-password') {
                     clearError('super-confirm-password-error');
                 }
-            }
+            });
         });
 
-        // Clear error on input
-        input.addEventListener('input', function () {
-            const fieldId = this.id;
-            if (fieldId === 'super-firstName') {
-                clearError('super-firstName-error');
-            } else if (fieldId === 'super-lastName') {
-                clearError('super-lastName-error');
-            } else if (fieldId === 'super-email') {
-                clearError('super-email-error');
-            } else if (fieldId === 'super-username') {
-                clearError('super-username-error');
-            } else if (fieldId === 'super-phone') {
-                clearError('super-phone-error');
-            } else if (fieldId === 'super-password') {
-                clearError('super-password-error');
-            } else if (fieldId === 'super-confirm-password') {
-                clearError('super-confirm-password-error');
-            }
-        });
-    });
+        // Phone number formatting
+        const phoneInput = document.getElementById('super-phone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function (e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 10) {
+                    value = value.substring(0, 10);
+                }
+                e.target.value = value;
+            });
+        }
 
-    // Phone number formatting
-    const phoneInput = document.getElementById('super-phone');
-    if (phoneInput) {
-        phoneInput.addEventListener('input', function (e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length > 10) {
-                value = value.substring(0, 10);
-            }
-            e.target.value = value;
-        });
-    }
+        // Handle success message and clear form
+        const urlParams = new URLSearchParams(window.location.search);
+        const successParam = urlParams.get('success');
 
-    // Handle success message and clear form
-    const urlParams = new URLSearchParams(window.location.search);
-    const successParam = urlParams.get('success');
-    
-    if (successParam === 'true') {
-        console.log('✅ Registration successful, clearing form...');
-        
-        // Clear form after successful registration
+        if (successParam === 'true') {
+            console.log('✅ Registration successful, clearing form...');
+
+            // Clear form after successful registration
+            setTimeout(() => {
+                clearForm();
+            }, 100);
+
+            // Auto-remove success message after 8 seconds
+            setTimeout(() => {
+                const successAlert = document.querySelector('.alert-success');
+                if (successAlert) {
+                    const closeBtn = successAlert.querySelector('.btn-close');
+                    if (closeBtn) closeBtn.click();
+                }
+            }, 8000);
+        }
+
+        // Auto-remove error messages after 8 seconds
         setTimeout(() => {
-            clearForm();
-        }, 100);
-        
-        // Auto-remove success message after 8 seconds
-        setTimeout(() => {
-            const successAlert = document.querySelector('.alert-success');
-            if (successAlert) {
-                const closeBtn = successAlert.querySelector('.btn-close');
+            const alerts = document.querySelectorAll('.alert-danger');
+            alerts.forEach(alert => {
+                const closeBtn = alert.querySelector('.btn-close');
                 if (closeBtn) closeBtn.click();
-            }
+            });
         }, 8000);
-    }
 
-    // Auto-remove error messages after 8 seconds
-    setTimeout(() => {
-        const alerts = document.querySelectorAll('.alert-danger');
-        alerts.forEach(alert => {
-            const closeBtn = alert.querySelector('.btn-close');
-            if (closeBtn) closeBtn.click();
+        // Close button functionality for alerts
+        document.querySelectorAll('.btn-close').forEach(btn => {
+            btn.addEventListener('click', function () {
+                this.closest('.alert').remove();
+            });
         });
-    }, 8000);
 
-    // Close button functionality for alerts
-    document.querySelectorAll('.btn-close').forEach(btn => {
-        btn.addEventListener('click', function () {
-            this.closest('.alert').remove();
-        });
+        // Auto-focus first input on page load
+        setTimeout(() => {
+            const firstInput = document.querySelector('.form-input');
+            if (firstInput) firstInput.focus();
+        }, 500);
     });
 
-    // Auto-focus first input on page load
-    setTimeout(() => {
-        const firstInput = document.querySelector('.form-input');
-        if (firstInput) firstInput.focus();
-    }, 500);
-});
+    // Profile picture preview for super admin form
+    function previewSuperAdminImage(input) {
+        const preview = document.getElementById('superAdminProfilePreview');
+        const file = input.files[0];
 
-// Profile picture preview for super admin form
-function previewSuperAdminImage(input) {
-    const preview = document.getElementById('superAdminProfilePreview');
-    const file = input.files[0];
-    
-    if (file) {
-        // Validate file type
-        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-        if (!allowedTypes.includes(file.type)) {
-            document.getElementById('super-admin-pic-error').textContent = 'Please select a valid image file (JPEG, PNG, GIF, WebP)';
-            input.value = '';
-            return;
+        if (file) {
+            // Validate file type
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+            if (!allowedTypes.includes(file.type)) {
+                document.getElementById('super-admin-pic-error').textContent = 'Please select a valid image file (JPEG, PNG, GIF, WebP)';
+                input.value = '';
+                return;
+            }
+
+            // Validate file size (2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                document.getElementById('super-admin-pic-error').textContent = 'Image size must be less than 2MB';
+                input.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                document.getElementById('super-admin-pic-error').textContent = '';
+            }
+            reader.readAsDataURL(file);
         }
-        
-        // Validate file size (2MB)
-        if (file.size > 2 * 1024 * 1024) {
-            document.getElementById('super-admin-pic-error').textContent = 'Image size must be less than 2MB';
-            input.value = '';
-            return;
-        }
-        
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            preview.src = e.target.result;
-            document.getElementById('super-admin-pic-error').textContent = '';
-        }
-        reader.readAsDataURL(file);
     }
-}
 </script>
+
 <script>
-attachRecaptcha("superAdminRegisterForm", "super_admin");
+    attachRecaptcha("superAdminRegisterForm", "super_admin");
 </script>
+
 {{>footer}}
