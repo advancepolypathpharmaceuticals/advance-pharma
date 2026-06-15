@@ -11,4 +11,5 @@ const response = await axios.post(
 
 console.log("RECAPTCHA RESPONSE:", response.data);
 
+
 return response.data.success && response.data.score > 0.5;
