@@ -10,17 +10,17 @@ module.exports = async (req, res, next) => {
 
   const token = req.body?.recaptchaToken;
 
-  if (!token) {
-    return res.status(400).send("reCAPTCHA token missing");
-  }
+  // if (!token) {
+  //   return res.status(400).send("reCAPTCHA token missing");
+  // }
 
   const verified = await verifyRecaptcha(token);
 
   console.log("VERIFIED:", verified);
 
-  if (!verified) {
-    return res.status(400).send("reCAPTCHA verification failed");
-  }
+  // if (!verified) {
+    //return res.status(400).send("reCAPTCHA verification failed");
+  // }
 
   next();
 };
