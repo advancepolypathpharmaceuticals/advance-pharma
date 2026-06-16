@@ -1,12 +1,26 @@
-const verifyRecaptcha = require("../helpers/recaptcha");
+const axios = require("axios");
 
-module.exports = async (req, res, next) => {
+async function verifyRecaptcha(token) {
+  try {
+    const response = await axios.post(
+      "https://www.google.com/recaptcha/api/siteverify",
+      null,
+      {
+        params: {
+          secret: process.env.RECAPTCHA_SECRET_KEY,
+          response: token,
+        },
+      }
+    );
 
-    console.log("================================");
-    console.log("URL:", req.originalUrl);
-    console.log("BODY:", req.body);
-    console.log("TOKEN:", req.body?.recaptchaToken);
-    console.log("================================");
+    console.log("RECAPTCHA RESPONSE:", response.data);
 
-    return next();
-};
+    return response.data.success && response.data.score > 0.5;
+
+  } catch (err) {
+    console.log("reCAPTCHA Error:", err.message);
+    return false;
+  }
+}
+
+module.exports = verifyRecaptcha;
