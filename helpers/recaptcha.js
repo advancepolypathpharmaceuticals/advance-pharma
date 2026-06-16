@@ -1,49 +1,26 @@
-function attachRecaptcha(formId, actionName) {
+const axios = require("axios");
 
-    const form = document.getElementById(formId);
+async function verifyRecaptcha(token) {
+  try {
+    const response = await axios.post(
+      "https://www.google.com/recaptcha/api/siteverify",
+      null,
+      {
+        params: {
+          secret: process.env.RECAPTCHA_SECRET_KEY,
+          response: token,
+        },
+      }
+    );
 
-    if (!form) {
-        console.log("FORM NOT FOUND:", formId);
-        return;
-    }
+    console.log("RECAPTCHA RESPONSE:", response.data);
 
-    console.log("RECAPTCHA ATTACHED:", formId);
+    return response.data.success && response.data.score > 0.5;
 
-    form.addEventListener("submit", function(e) {
-
-        console.log("RECAPTCHA SUBMIT FIRED:", formId);
-
-        e.preventDefault();
-
-        grecaptcha.ready(function() {
-
-            console.log("RECAPTCHA READY");
-
-            grecaptcha.execute(
-                "6LcmCQ4tAAAAAEFDRP4OBVuOIptLKJkUUmKpBtmL",
-                { action: actionName }
-            ).then(function(token) {
-
-                console.log("TOKEN GENERATED:", token);
-
-                let input = form.querySelector("[name='recaptchaToken']");
-
-                if (!input) {
-                    input = document.createElement("input");
-                    input.type = "hidden";
-                    input.name = "recaptchaToken";
-                    form.appendChild(input);
-                }
-
-                input.value = token;
-
-                console.log("TOKEN SET");
-
-                form.submit();
-            });
-
-        });
-
-    });
-
+  } catch (err) {
+    console.log("reCAPTCHA Error:", err.message);
+    return false;
+  }
 }
+
+module.exports = verifyRecaptcha;
