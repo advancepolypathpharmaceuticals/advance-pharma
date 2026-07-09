@@ -61,6 +61,11 @@ app.use("/public", express.static("./public")); // for uploaded files like image
 // Custom helpers
 require("./helpers");
 
+// Health check endpoint for cron-job.org
+app.get("/health", (req, res) => {
+    res.status(200).send("OK");
+});
+
 // Routes
 const Router = require("./routes/index");
 app.use(express.json());
