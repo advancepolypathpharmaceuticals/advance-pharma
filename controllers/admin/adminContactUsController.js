@@ -32,7 +32,7 @@ async function editPage(req,res){
         
                             <p style="font-size: 15px; color: #333; line-height: 1.6;">
                                 We are pleased to inform you that your query regarding 
-                                <strong style="color:#0066cc;>"${data.subject}"</strong> has been successfully resolved.  
+                                <strong style="color:#0066cc;">${data.subject}"</strong> has been successfully resolved.  
                                 Our team has carefully reviewed your concern and taken the necessary action.
                             </p>
         
