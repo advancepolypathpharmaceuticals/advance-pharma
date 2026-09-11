@@ -250,7 +250,7 @@ async function contactStorePage(req, res) {
     await mailer.sendMail(
       {
         from: "noreply@advancepolypathicpharmaceuticals.in",
-        to: process.env.MAIL_SENDER,
+        to: process.env.ADMIN_SENDER,
         subject:
           "Query Alert: A New Message/Contact Form Submission Has Been Received",
         html: `
@@ -544,7 +544,7 @@ async function careerStorePage(req, res) {
     await mailer.sendMail(
       {
         from: "noreply@advancepolypathicpharmaceuticals.in",
-        to: process.env.MAIL_SENDER,
+        to: process.env.ADMIN_SENDER,
         subject: "Career Application Alert: New Submission Received",
         html: `
         <div style="font-family: Arial, Helvetica, sans-serif; max-width:650px; margin:auto; padding:20px; border:1px solid #e0e0e0; border-radius:8px; background:#f9f9f9;">
