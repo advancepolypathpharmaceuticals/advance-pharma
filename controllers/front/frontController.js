@@ -250,7 +250,7 @@ async function contactStorePage(req, res) {
     await mailer.sendMail(
       {
         from: "noreply@advancepolypathicpharmaceuticals.in",
-        to: process.env.ADMIN_SENDER,
+        to: process.env.MAIL_SENDER,
         subject:
           "Query Alert: A New Message/Contact Form Submission Has Been Received",
         html: `
@@ -325,43 +325,29 @@ async function contactStorePage(req, res) {
       testimonials,
     });
   } catch (error) {
+    // console.log(error)
     let errorMessage = {};
-
-    if (error.errors) {
-        if (error.errors.name) {
-            errorMessage["name"] = error.errors.name.message;
-        }
-
-        if (error.errors.email) {
-            errorMessage["email"] = error.errors.email.message;
-        }
-
-        if (error.errors.phone) {
-            errorMessage["phone"] = error.errors.phone.message;
-        }
-
-        if (error.errors.subject) {
-            errorMessage["subject"] = error.errors.subject.message;
-        }
-
-        if (error.errors.message) {
-            errorMessage["message"] = error.errors.message.message;
-        }
-    } else {
-        console.error("Contact email/server error:", error);
-        errorMessage["general"] =
-            "Unable to send your message. Please try again later.";
-    }
-
+    error.errors.name ? (errorMessage["name"] = error.errors.name.message) : "";
+    error.errors.email
+      ? (errorMessage["email"] = error.errors.email.message)
+      : "";
+    error.errors.phone
+      ? (errorMessage["phone"] = error.errors.phone.message)
+      : "";
+    error.errors.subject
+      ? (errorMessage["subject"] = error.errors.subject.message)
+      : "";
+    error.errors.message
+      ? (errorMessage["message"] = error.errors.message.message)
+      : "";
     console.log(errorMessage);
-
     res.render("contactPage", {
-        session: req.session,
-        title: "Contact Us",
-        errorMessage,
-        data: {}
+      session: req.session,
+      title: "Contact Us",
+      errorMessage,
+      data,
     });
-}
+  }
 }
 
 // -------------------- Career --------------------
@@ -558,7 +544,7 @@ async function careerStorePage(req, res) {
     await mailer.sendMail(
       {
         from: "noreply@advancepolypathicpharmaceuticals.in",
-        to: process.env.ADMIN_SENDER,
+        to: process.env.MAIL_SENDER,
         subject: "Career Application Alert: New Submission Received",
         html: `
         <div style="font-family: Arial, Helvetica, sans-serif; max-width:650px; margin:auto; padding:20px; border:1px solid #e0e0e0; border-radius:8px; background:#f9f9f9;">
