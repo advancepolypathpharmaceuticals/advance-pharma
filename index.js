@@ -61,7 +61,7 @@ app.use("/public", express.static("./public")); // for uploaded files like image
 // Custom helpers
 require("./helpers");
 
-// Health check endpoint for cron-job.org
+// Health check endpoint
 app.get("/health", (req, res) => {
     res.status(200).send("OK");
 });
