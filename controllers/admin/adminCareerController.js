@@ -32,7 +32,7 @@ async function editPage(req, res) {
       await application.save();
 
       await mailer.sendMail({
-        from: process.env.MAIL_SENDER,
+        from: "noreply@advancepolypathicpharmaceuticals.in",
         to: application.email,
         subject: "Your Career Application Status – Advance Poly Pathic Pharmaceuticals",
         html: `
