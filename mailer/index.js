@@ -12,13 +12,9 @@ const mailer = nodeMailer.createTransport({
 
 mailer.verify((error) => {
     if (error) {
-        console.error("========== MAILER ERROR ==========");
-        console.error(error);
-        console.error("MAIL_SENDER:", process.env.MAIL_SENDER);
-        console.error("MAIL_PASSWORD EXISTS:", !!process.env.MAIL_PASSWORD);
-        console.error("==================================");
+        console.error("MAILER ERROR:", error);
     } else {
-        console.log("========== MAILER READY ==========");
+        console.log("MAILER READY");
     }
 });
 
