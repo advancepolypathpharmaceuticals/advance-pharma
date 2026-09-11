@@ -325,29 +325,43 @@ async function contactStorePage(req, res) {
       testimonials,
     });
   } catch (error) {
-    // console.log(error)
     let errorMessage = {};
-    error.errors.name ? (errorMessage["name"] = error.errors.name.message) : "";
-    error.errors.email
-      ? (errorMessage["email"] = error.errors.email.message)
-      : "";
-    error.errors.phone
-      ? (errorMessage["phone"] = error.errors.phone.message)
-      : "";
-    error.errors.subject
-      ? (errorMessage["subject"] = error.errors.subject.message)
-      : "";
-    error.errors.message
-      ? (errorMessage["message"] = error.errors.message.message)
-      : "";
+
+    if (error.errors) {
+        if (error.errors.name) {
+            errorMessage["name"] = error.errors.name.message;
+        }
+
+        if (error.errors.email) {
+            errorMessage["email"] = error.errors.email.message;
+        }
+
+        if (error.errors.phone) {
+            errorMessage["phone"] = error.errors.phone.message;
+        }
+
+        if (error.errors.subject) {
+            errorMessage["subject"] = error.errors.subject.message;
+        }
+
+        if (error.errors.message) {
+            errorMessage["message"] = error.errors.message.message;
+        }
+    } else {
+        console.error("Contact email/server error:", error);
+        errorMessage["general"] =
+            "Unable to send your message. Please try again later.";
+    }
+
     console.log(errorMessage);
+
     res.render("contactPage", {
-      session: req.session,
-      title: "Contact Us",
-      errorMessage,
-      data,
+        session: req.session,
+        title: "Contact Us",
+        errorMessage,
+        data: {}
     });
-  }
+}
 }
 
 // -------------------- Career --------------------
