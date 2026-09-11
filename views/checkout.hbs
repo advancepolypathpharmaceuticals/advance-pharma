@@ -604,8 +604,6 @@ function autoFillCustomerData() {
 
 </script>
 
-<script src="https://www.google.com/recaptcha/api.js?render=6LcmCQ4tAAAAAEFDRP4OBVuOIptLKJkUUmKpBtmL"></script>
-
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 
@@ -684,18 +682,10 @@ function autoFillCustomerData() {
     const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
 
     // ================= COD =================
-    if (paymentMethod === "cash_on_delivery") {
-
-      const token = await grecaptcha.execute(
-        "6LcmCQ4tAAAAAEFDRP4OBVuOIptLKJkUUmKpBtmL",
-        { action: "checkout" }
-      );
-
-      document.getElementById("checkoutRecaptchaToken").value = token;
-
-      form.submit();
-      return;
-    }
+   if (paymentMethod === "cash_on_delivery") {
+    form.submit();
+    return;
+}
 
     // ================= ONLINE =================
     try {
@@ -739,13 +729,6 @@ function autoFillCustomerData() {
         },
 
         handler: async function (response) {
-
-          const token = await grecaptcha.execute(
-            "6LcmCQ4tAAAAAEFDRP4OBVuOIptLKJkUUmKpBtmL",
-            { action: "checkout" }
-          );
-
-          document.getElementById("checkoutRecaptchaToken").value = token;
 
           const input = document.createElement("input");
           input.type = "hidden";
