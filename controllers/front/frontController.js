@@ -145,7 +145,7 @@ async function contactStorePage(req, res) {
     data.date = new Date();
     await data.save();
 
-    mailer.sendMail(
+    await mailer.sendMail(
       {
         from: process.env.MAIL_SENDER,
         to: data.email,
@@ -247,7 +247,7 @@ async function contactStorePage(req, res) {
         if (error) console.log(error);
       },
     );
-    mailer.sendMail(
+    await mailer.sendMail(
       {
         from: process.env.MAIL_SENDER,
         to: process.env.MAIL_SENDER,
@@ -444,7 +444,7 @@ async function careerStorePage(req, res) {
     console.log("SUCCESS: Career application saved to database");
 
     // Send emails (your existing email code)
-    mailer.sendMail(
+    await mailer.sendMail(
       {
         from: process.env.MAIL_SENDER,
         to: data.email,
@@ -541,7 +541,7 @@ async function careerStorePage(req, res) {
       },
     );
 
-    mailer.sendMail(
+    await mailer.sendMail(
       {
         from: process.env.MAIL_SENDER,
         to: process.env.MAIL_SENDER,
