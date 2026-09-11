@@ -178,33 +178,51 @@ async function contactStorePage(req, res) {
                             For your convenience, you may also reach us directly:
                         </p>
                         
-                        <table style="font-size: 15px; color: #333; line-height: 1.8; width: 100%; max-width: 600px;">
-                            <tr>
-                                <td style="padding: 6px 0;">
-                                    <img src="https://img.icons8.com/color/24/000000/new-post.png" alt="Email" style="vertical-align: middle; margin-right: 8px;">
-                                    <a href="mailto:advancepolypathpharmaceuticals@gmail.com" style="color:#0066cc; text-decoration: none;">advancepolypathpharmaceuticals@gmail.com</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 6px 0;">
-                                    <img src="https://img.icons8.com/color/24/000000/phone.png" alt="Phone" style="vertical-align: middle; margin-right: 8px;">
-                                    <a href="tel:+9199893278" style="color:#0066cc; text-decoration: none;">+91 9199893278</a>, 
-                                    <a href="tel:+917677413112" style="color:#0066cc; text-decoration: none;">+91 7677413112</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 6px 0;">
-                                    <img src="https://img.icons8.com/color/24/000000/whatsapp.png" alt="WhatsApp" style="vertical-align: middle; margin-right: 8px;">
-                                    <a href="https://wa.me/917903159447" style="color:#0066cc; text-decoration: none;">+91 7903159447</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 6px 0;">
-                                    <img src="https://img.icons8.com/color/24/000000/domain.png" alt="Website" style="vertical-align: middle; margin-right: 8px;">
-                                    <a href="https://advancepolypathicpharmaceuticals.in" style="color:#0066cc; text-decoration: none;">advancepolypathicpharmaceuticals.in</a>
-                                </td>
-                            </tr>
-                        </table>
+                        <table style="font-size:15px; color:#333; line-height:1.8; width:100%; max-width:600px;">
+    <tr>
+        <td style="padding:6px 0;">
+            <span style="font-size:20px; margin-right:8px;">📧</span>
+            <a href="mailto:advancepolypathpharmaceuticals@gmail.com"
+               style="color:#0066cc; text-decoration:none;">
+                advancepolypathpharmaceuticals@gmail.com
+            </a>
+        </td>
+    </tr>
+
+    <tr>
+        <td style="padding:6px 0;">
+            <span style="font-size:20px; margin-right:8px;">📞</span>
+            <a href="tel:+9199893278"
+               style="color:#0066cc; text-decoration:none;">
+                +91 9199893278
+            </a>,
+            <a href="tel:+917677413112"
+               style="color:#0066cc; text-decoration:none;">
+                +91 7677413112
+            </a>
+        </td>
+    </tr>
+
+    <tr>
+        <td style="padding:6px 0;">
+            <span style="font-size:20px; margin-right:8px;">💬</span>
+            <a href="https://wa.me/917903159447"
+               style="color:#0066cc; text-decoration:none;">
+                +91 7903159447
+            </a>
+        </td>
+    </tr>
+
+    <tr>
+        <td style="padding:6px 0;">
+            <span style="font-size:20px; margin-right:8px;">🌐</span>
+            <a href="https://advancepolypathicpharmaceuticals.in"
+               style="color:#0066cc; text-decoration:none;">
+                advancepolypathicpharmaceuticals.in
+            </a>
+        </td>
+    </tr>
+</table>
                 
                         <!-- Closing -->
                         <p style="font-size: 15px; color: #333; line-height: 1.6; margin-top: 20px;">
@@ -455,26 +473,50 @@ async function careerStorePage(req, res) {
           </p>
 
           <table style="font-size:15px; color:#333; line-height:1.8; width:100%; max-width:600px;">
-            <tr>
-              <td style="padding:6px 0;">
-                <img src="https://img.icons8.com/color/24/000000/new-post.png" alt="Email" style="vertical-align:middle; margin-right:8px;">
-                <a href="mailto:advancepolypathpharmaceuticals@gmail.com" style="color:#0066cc; text-decoration:none;">advancepolypathpharmaceuticals@gmail.com</a>
-              </td>
-            </tr>
-            <tr>
-              <td style="padding:6px 0;">
-                <img src="https://img.icons8.com/color/24/000000/phone.png" alt="Phone" style="vertical-align:middle; margin-right:8px;">
-                <a href="tel:+9199893278" style="color:#0066cc; text-decoration:none;">+91 9199893278</a>,
-                <a href="tel:+917677413112" style="color:#0066cc; text-decoration:none;">+91 7677413112</a>
-              </td>
-            </tr>
-            <tr>
-              <td style="padding:6px 0;">
-                <img src="https://img.icons8.com/color/24/000000/domain.png" alt="Website" style="vertical-align:middle; margin-right:8px;">
-                <a href="https://advancepolypathicpharmaceuticals.in" style="color:#0066cc; text-decoration:none;">advancepolypathicpharmaceuticals.in</a>
-              </td>
-            </tr>
-          </table>
+    <tr>
+        <td style="padding:6px 0;">
+            <span style="font-size:20px; margin-right:8px;">📧</span>
+            <a href="mailto:advancepolypathpharmaceuticals@gmail.com"
+               style="color:#0066cc; text-decoration:none;">
+                advancepolypathpharmaceuticals@gmail.com
+            </a>
+        </td>
+    </tr>
+
+    <tr>
+        <td style="padding:6px 0;">
+            <span style="font-size:20px; margin-right:8px;">📞</span>
+            <a href="tel:+9199893278"
+               style="color:#0066cc; text-decoration:none;">
+                +91 9199893278
+            </a>,
+            <a href="tel:+917677413112"
+               style="color:#0066cc; text-decoration:none;">
+                +91 7677413112
+            </a>
+        </td>
+    </tr>
+
+    <tr>
+        <td style="padding:6px 0;">
+            <span style="font-size:20px; margin-right:8px;">💬</span>
+            <a href="https://wa.me/917903159447"
+               style="color:#0066cc; text-decoration:none;">
+                +91 7903159447
+            </a>
+        </td>
+    </tr>
+
+    <tr>
+        <td style="padding:6px 0;">
+            <span style="font-size:20px; margin-right:8px;">🌐</span>
+            <a href="https://advancepolypathicpharmaceuticals.in"
+               style="color:#0066cc; text-decoration:none;">
+                advancepolypathicpharmaceuticals.in
+            </a>
+        </td>
+    </tr>
+</table>
 
           <p style="font-size:15px; color:#333; line-height:1.6; margin-top:20px;">
             We appreciate your interest in joining our team and look forward to connecting with you.
