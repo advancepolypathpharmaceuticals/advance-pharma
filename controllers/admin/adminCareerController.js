@@ -31,7 +31,7 @@ async function editPage(req, res) {
       application.reviewed = true;
       await application.save();
 
-      mailer.sendMail({
+      await mailer.sendMail({
         from: process.env.MAIL_SENDER,
         to: application.email,
         subject: "Your Career Application Status – Advance Poly Pathic Pharmaceuticals",
