@@ -1,92 +1,86 @@
-const nodemailer = require("nodemailer");
+// const nodemailer = require("nodemailer");
 
-const mailer = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
+// const mailer = nodemailer.createTransport({
+//     host: "smtp.gmail.com",
+//     port: 465,
+//     secure: true,
+//     auth: {
+//         user: process.env.MAIL_SENDER,
+//         pass: process.env.MAIL_PASSWORD,
+//     },
+//     connectionTimeout: 20000,
+//     greetingTimeout: 20000,
+//     socketTimeout: 30000,
+// });
 
-    auth: {
-        user: process.env.MAIL_SENDER,
-        pass: process.env.MAIL_PASSWORD,
-    },
+// console.log("MAIL CONFIG:", {
+//     sender: process.env.MAIL_SENDER,
+//     passwordExists: !!process.env.MAIL_PASSWORD,
+//     passwordLength: process.env.MAIL_PASSWORD
+//         ? process.env.MAIL_PASSWORD.length
+//         : 0,
+// });
 
-    connectionTimeout: 20000,
-    greetingTimeout: 20000,
-    socketTimeout: 30000,
-});
+// mailer.verify((error, success) => {
+//     if (error) {
+//         console.error("========== MAILER VERIFY FAILED ==========");
+//         console.error(error);
+//         console.error("==========================================");
+//     } else {
+//         console.log("========== MAILER READY ==========");
+//         console.log(success);
+//         console.log("==================================");
+//     }
+// });
 
+// module.exports = mailer;
 
-// ======================================================
-// MAIL CONFIGURATION CHECK
-// ======================================================
+const { Resend } = require("resend");
 
-console.log("==========================================");
-console.log("MAIL CONFIGURATION");
-console.log("==========================================");
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-console.log(
-    "MAIL_SENDER:",
-    process.env.MAIL_SENDER || "NOT SET"
-);
+const mailer = {
+    sendMail: async function (options) {
+        try {
 
-console.log(
-    "MAIL_PASSWORD EXISTS:",
-    !!process.env.MAIL_PASSWORD
-);
+            const { data, error } = await resend.emails.send({
+                from: options.from || "onboarding@resend.dev",
+                to: options.to,
+                subject: options.subject,
+                html: options.html,
+                text: options.text,
+                replyTo: options.replyTo
+            });
 
-console.log(
-    "MAIL_PASSWORD LENGTH:",
-    process.env.MAIL_PASSWORD
-        ? process.env.MAIL_PASSWORD.length
-        : 0
-);
+            if (error) {
+                console.error("==========================================");
+                console.error("RESEND EMAIL FAILED");
+                console.error("==========================================");
+                console.error(error);
+                console.error("==========================================");
 
-console.log("SMTP HOST: smtp.gmail.com");
-console.log("SMTP PORT: 465");
-console.log("SMTP SECURE: true");
+                throw new Error(error.message);
+            }
 
-console.log("==========================================");
+            console.log("==========================================");
+            console.log("EMAIL SENT SUCCESSFULLY");
+            console.log("==========================================");
+            console.log("Email ID:", data.id);
+            console.log("==========================================");
 
+            return data;
 
-// ======================================================
-// VERIFY SMTP CONNECTION
-// ======================================================
+        } catch (error) {
 
-mailer.verify(function (error, success) {
+            console.error("==========================================");
+            console.error("EMAIL SENDING ERROR");
+            console.error("==========================================");
+            console.error(error);
+            console.error("==========================================");
 
-    if (error) {
-
-        console.error("==========================================");
-        console.error("MAILER VERIFY FAILED");
-        console.error("==========================================");
-
-        console.error("Error Code:", error.code);
-        console.error("Error Command:", error.command);
-        console.error("Error Message:", error.message);
-
-        console.error("Full Error:");
-        console.error(error);
-
-        console.error("==========================================");
-
-    } else {
-
-        console.log("==========================================");
-        console.log("MAILER READY");
-        console.log("==========================================");
-
-        console.log(
-            "SMTP connection to Gmail is working."
-        );
-
-        console.log("==========================================");
+            throw error;
+        }
     }
-
-});
-
-
-// ======================================================
-// EXPORT MAILER
-// ======================================================
+};
 
 module.exports = mailer;
