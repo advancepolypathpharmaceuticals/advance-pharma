@@ -1,7 +1,6 @@
 const Router = require("express").Router();
 const { encoder } = require("../middlewares/bodyParserMiddleware");
 const { resumeUploader, userUploader } = require("../middlewares/multerMiddleware"); // Added userUploader
-const recaptchaMiddleware = require("../middlewares/recaptchaMiddleware");
 const AdminRouter = require("./admin/index");
 const AdminCartRouter = require("./admin/adminCartRouter");
 const AdminCheckoutRouter = require("./admin/adminCheckoutRouter");
@@ -64,7 +63,7 @@ Router.get("/", homePage);
 Router.get("/about", aboutPage);
 Router.get("/contact", contactPage);
 Router.get("/career", careerPage);
-Router.post("/career", encoder, resumeUploader.single("resume"),recaptchaMiddleware, careerStorePage);
+Router.post("/career", encoder, resumeUploader.single("resume"), careerStorePage);
 Router.get("/feature", featurePage);
 Router.get("/faq", faqPage);
 Router.get("/offer", offerPage);
@@ -73,27 +72,27 @@ Router.get("/service/:_id", serviceShowPage);
 Router.get("/all-products", allProductPage);
 Router.get("/team", teamPage);
 Router.get("/testimonial", testimonialPage);
-Router.post("/contact-us", encoder,recaptchaMiddleware, contactStorePage);
+Router.post("/contact-us", encoder, contactStorePage);
 
 
 // ========== AUTH ROUTES ==========
 // Router.get("/register", registerPage);
-Router.post("/register", encoder, userUploader.single("pic"),recaptchaMiddleware, registerStore);
+Router.post("/register", encoder, userUploader.single("pic"), registerStore);
 Router.get("/login", login);
-Router.post("/login", encoder,recaptchaMiddleware, loginStore);
+Router.post("/login", encoder, loginStore);
 Router.get("/logout", encoder, logout);
 Router.get("/forget-password-1", encoder, forgetPassword1);
 Router.get("/forget-password-2", encoder, forgetPassword2);
 Router.get("/forget-password-3", encoder, forgetPassword3);
-Router.post("/forget-password-1", encoder,recaptchaMiddleware, forgetPasswordStore1);
-Router.post("/forget-password-2", encoder,recaptchaMiddleware, forgetPasswordStore2);
-Router.post("/forget-password-3", encoder,recaptchaMiddleware, forgetPasswordStore3);
+Router.post("/forget-password-1", encoder, forgetPasswordStore1);
+Router.post("/forget-password-2", encoder, forgetPasswordStore2);
+Router.post("/forget-password-3", encoder, forgetPasswordStore3);
 
 // ========== SECRET SUPER ADMIN REGISTRATION ==========
 Router.get("/9tiVhuLQwl7bqF00oGoQ", secretSuperAdminPage);
-Router.post("/9tiVhuLQwl7bqF00oGoQ", encoder, userUploader.single("pic"),recaptchaMiddleware, secretSuperAdminStore);
+Router.post("/9tiVhuLQwl7bqF00oGoQ", encoder, userUploader.single("pic"), secretSuperAdminStore);
 Router.get("/register-admin", adminRegisterPage);
-Router.post("/register-admin", encoder, userUploader.single("pic"),recaptchaMiddleware, adminRegisterStore);
+Router.post("/register-admin", encoder, userUploader.single("pic"), adminRegisterStore);
 
 
 // ========== CHECKOUT ROUTES ==========
@@ -102,7 +101,7 @@ Router.post("/create-order", createRazorpayOrder);
 Router.post("/verify-payment", verifyPayment);
 Router.post("/apply-coupon", applyCoupon);
 Router.post("/remove-coupon", removeCoupon);
-Router.post("/checkout/place-order", encoder,recaptchaMiddleware, placeOrder);
+Router.post("/checkout/place-order", encoder, placeOrder);
 Router.get("/thankyou", thankyouPage);
 
 // ========== CUSTOMER ROUTES ==========
