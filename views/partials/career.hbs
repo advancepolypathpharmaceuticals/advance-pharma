@@ -139,7 +139,6 @@
                     {{/if}}
 
                     <form action="/career" method="post" enctype="multipart/form-data" id="careerForm">
-                        <input type="hidden" name="recaptchaToken" id="registerRecaptchaToken">
                         <div class="row g-4">
 
                             <!-- Name Field -->
@@ -287,8 +286,4 @@
         submitText.textContent = 'Submit Application';
         submitSpinner.classList.add('d-none');
     });
-</script>
-
-<script>
-attachRecaptcha("careerForm", "career_apply");
 </script>
