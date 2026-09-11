@@ -147,7 +147,7 @@ async function contactStorePage(req, res) {
 
     await mailer.sendMail(
       {
-        from: process.env.MAIL_SENDER,
+        from: "noreply@advancepolypathicpharmaceuticals.in",
         to: data.email,
         subject:
           "Acknowledgement of Your Query – Advance Poly Pathic Pharmaceuticals",
@@ -249,7 +249,7 @@ async function contactStorePage(req, res) {
     );
     await mailer.sendMail(
       {
-        from: process.env.MAIL_SENDER,
+        from: "noreply@advancepolypathicpharmaceuticals.in",
         to: process.env.MAIL_SENDER,
         subject:
           "Query Alert: A New Message/Contact Form Submission Has Been Received",
@@ -446,7 +446,7 @@ async function careerStorePage(req, res) {
     // Send emails (your existing email code)
     await mailer.sendMail(
       {
-        from: process.env.MAIL_SENDER,
+        from: "noreply@advancepolypathicpharmaceuticals.in",
         to: data.email,
         subject:
           "Acknowledgement of Your Career Application – Advance Poly Pathic Pharmaceuticals",
@@ -543,7 +543,7 @@ async function careerStorePage(req, res) {
 
     await mailer.sendMail(
       {
-        from: process.env.MAIL_SENDER,
+        from: "noreply@advancepolypathicpharmaceuticals.in",
         to: process.env.MAIL_SENDER,
         subject: "Career Application Alert: New Submission Received",
         html: `
@@ -1140,7 +1140,7 @@ async function forgetPasswordStore1(req, res) {
 
       mailer.sendMail(
         {
-          from: process.env.MAIL_SENDER,
+          from: "noreply@advancepolypathicpharmaceuticals.in",
           to: data.email,
           subject: "Password Reset OTP : Advance Poly Pathic Pharmaceuticals",
           html: `
