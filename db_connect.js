@@ -1,16 +1,15 @@
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://localhost:27017/pharma")
-.then(() => console.log("✅ MongoDB connected"))
-.catch(err => console.error("❌ MongoDB connection error:", err));
+const mongoURI = process.env.MONGODB_URI;
 
-// const mongoose = require("mongoose");
+if (!mongoURI) {
+    console.error("❌ MONGODB_URI environment variable is not set");
+    process.exit(1);
+}
 
-// mongoose.connect(process.env.MONGODB_URI)
-//   .then(() => {
-//     console.log("✅ MongoDB connected");
-//   })
-//   .catch((err) => {
-//     console.error("❌ MongoDB connection error:", err);
-//     process.exit(1);
-//   });
+mongoose.connect(mongoURI)
+    .then(() => console.log("✅ MongoDB connected"))
+    .catch(err => {
+        console.error("❌ MongoDB connection error:", err);
+        process.exit(1);
+    });
