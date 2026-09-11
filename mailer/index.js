@@ -44,7 +44,7 @@ const mailer = {
         try {
 
             const { data, error } = await resend.emails.send({
-                from: options.from || "onboarding@resend.dev",
+                from: options.from || "noreply@advancepolypathicpharmaceuticals.in",
                 to: options.to,
                 subject: options.subject,
                 html: options.html,
