@@ -290,7 +290,6 @@
                 {{/if}}
 
                 <form id="registerForm" action="/register" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="recaptchaToken" id="registerAdminRecaptchaToken">
                     <!-- Profile Picture Upload -->
                     <div class="profile-pic-container">
                         <img id="registerProfilePreview" src="/img/default-profile.png" class="profile-pic-preview"
@@ -582,24 +581,8 @@
                 console.log('Login form validation - hasError:', hasError);
 
                 if (!hasError) {
-
                     console.log('Login validation passed');
-
-                    grecaptcha.ready(function () {
-
-                        grecaptcha.execute(
-                            '6LcmCQ4tAAAAAEFDRP4OBVuOIptLKJkUUmKpBtmL',
-                            { action: 'login' }
-                        ).then(function (token) {
-
-                            document.getElementById("loginRecaptchaToken").value = token;
-
-                            loginForm.submit();
-
-                        });
-
-                    });
-
+                    loginForm.submit();
                 }
             });
         }
