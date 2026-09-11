@@ -15,7 +15,7 @@ async function editPage(req,res){
         if(data){
             data.active = false
             await data.save()
-            mailer.sendMail({
+            await mailer.sendMail({
             from:process.env.MAIL_SENDER,
             to:data.email,
              subject: "Your Query Has Been Resolved – Advance Poly Pathic Pharmaceuticals",
