@@ -44,28 +44,41 @@ const userUploader = multer({
 const resumeUploader = multer({
   storage: multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, 'public/uploads/resume/');
+      cb(null, path.join(__dirname, "../public/uploads/resume"));
     },
+
     filename: function (req, file, cb) {
-      const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1E9) + '-' + file.originalname;
+      const ext = path.extname(file.originalname);
+
+      const uniqueName =
+        Date.now() +
+        "-" +
+        Math.round(Math.random() * 1e9) +
+        ext;
+
       cb(null, uniqueName);
     }
   }),
+
   fileFilter: function (req, file, cb) {
     const allowedTypes = [
-      'application/pdf',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ];
-    
+
     if (allowedTypes.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error('Only PDF and Word documents are allowed'), false);
+      return cb(null, true);
     }
+
+    const error = new Error("Only PDF and Word documents are allowed");
+    error.code = "INVALID_FILE_TYPE";
+
+    cb(error, false);
   },
+
   limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB
+    fileSize: 5 * 1024 * 1024
   }
 });
 
