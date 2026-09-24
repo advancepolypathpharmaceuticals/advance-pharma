@@ -3,79 +3,120 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 
-app.set("trust proxy", 1);
-
+const path = require("path");
 const hbs = require("hbs");
 const session = require("express-session");
 
-// Connect to DB
+// Trust proxy
+app.set("trust proxy", 1);
+
+// =====================================================
+// DATABASE
+// =====================================================
 require("./db_connect");
 
-// Body parser middleware to handle POST data
+// =====================================================
+// BODY PARSER
+// =====================================================
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Session setup (must come BEFORE res.locals usage)
-app.use(session({
-    secret: process.env.SESSION_SECRET_KEY || "default_secret",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        secure: process.env.NODE_ENV === "production",
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24
-    }
-}));
+// =====================================================
+// SESSION
+// =====================================================
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET_KEY || "default_secret",
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            secure: process.env.NODE_ENV === "production",
+            httpOnly: true,
+            maxAge: 1000 * 60 * 60 * 24
+        }
+    })
+);
 
-
-// Make current path and cart count available in templates
+// =====================================================
+// GLOBAL LOCALS
+// =====================================================
 app.use((req, res, next) => {
+
     res.locals.currentPath = req.path;
     res.locals.session = req.session;
 
-    // Ensure session.cart always exists
+    // Ensure cart exists
     if (!req.session.cart) {
         req.session.cart = [];
     }
 
     res.locals.cartCount = req.session.cart.reduce(
-        (sum, item) => sum + (item.quantity || 0), 0
+        (sum, item) => sum + (item.quantity || 0),
+        0
     );
 
     next();
 });
 
-
-// Order stats middleware (AFTER session middleware)
+// =====================================================
+// ORDER STATS
+// =====================================================
 const injectOrderStats = require("./middlewares/orderStatsMiddleware");
+
 app.use(injectOrderStats);
 
-// View engine setup
+// =====================================================
+// VIEW ENGINE
+// =====================================================
 app.set("view engine", "hbs");
-hbs.registerPartials("./views/partials");
 
-// Static file serving
-app.use(express.static("./public")); // for public assets like CSS/JS
-app.use("/public", express.static("./public")); // for uploaded files like images
+hbs.registerPartials(
+    path.join(__dirname, "views/partials")
+);
 
-// Custom helpers
+// =====================================================
+// STATIC FILES
+// =====================================================
+
+// CSS / JS / images / uploaded files
+app.use(
+    express.static(
+        path.join(__dirname, "public")
+    )
+);
+
+// Optional: keeps existing /public/... URLs working
+app.use(
+    "/public",
+    express.static(
+        path.join(__dirname, "public")
+    )
+);
+
+// =====================================================
+// HELPERS
+// =====================================================
 require("./helpers");
 
-// Health check endpoint
+// =====================================================
+// HEALTH CHECK
+// =====================================================
 app.get("/health", (req, res) => {
     res.status(200).send("OK");
 });
 
-// Routes
+// =====================================================
+// ROUTES
+// =====================================================
 const Router = require("./routes/index");
-app.use(express.json());
-// app.use("/api", Router);
+
 app.use("/", Router);
 
-// Start server
+// =====================================================
+// START SERVER
+// =====================================================
 const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
-}
-);
+});
