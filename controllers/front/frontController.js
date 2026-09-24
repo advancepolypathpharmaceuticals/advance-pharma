@@ -873,6 +873,7 @@ async function loginStore(req, res) {
       role: user.role,
       email: user.email,
       phone: req.session.phone,
+      pic: user.pic,
     });
 
     // Save session before redirect
