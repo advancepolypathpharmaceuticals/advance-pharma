@@ -13,9 +13,9 @@ const {
 
 AdminTestimonialRouter.get("/",homePage)
 AdminTestimonialRouter.get("/create",createPage)
-AdminTestimonialRouter.post("/store",testimonialUploader.single('pic'),encoder, storePage)
+AdminTestimonialRouter.post("/store",testimonialUploader.single('pic'), storePage)
 AdminTestimonialRouter.get("/delete/:_id",deleteRecord)
 AdminTestimonialRouter.get("/edit/:_id",editPage)
-AdminTestimonialRouter.post("/update/:_id",testimonialUploader.single('pic'),encoder,storeUpdatePage)
+AdminTestimonialRouter.post("/update/:_id",testimonialUploader.single('pic'), storeUpdatePage)
 
 module.exports = AdminTestimonialRouter
