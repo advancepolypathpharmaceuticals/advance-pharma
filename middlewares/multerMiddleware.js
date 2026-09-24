@@ -1,5 +1,6 @@
 const multer = require("multer");
 const path = require("path"); // Add this import
+const fs = require("fs");
 
 function createUploader(folderName){
   const storage = multer.diskStorage({
@@ -81,6 +82,22 @@ const resumeUploader = multer({
     fileSize: 5 * 1024 * 1024
   }
 });
+
+function ensureUploadFolder(folderName) {
+  const uploadPath = path.join(
+    __dirname,
+    "../public/uploads",
+    folderName
+  );
+
+  if (!fs.existsSync(uploadPath)) {
+    fs.mkdirSync(uploadPath, {
+      recursive: true
+    });
+  }
+
+  return uploadPath;
+}
 
 module.exports = { 
     serviceUploader: createUploader("service"), 
