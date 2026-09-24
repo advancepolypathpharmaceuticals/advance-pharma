@@ -37,24 +37,34 @@
               <td>{{dateHelper date}}</td>
               <td>
                 {{#if active}}
-                  <span class="badge bg-warning text-dark">Open</span>
+                <span class="badge bg-warning text-dark">Open</span>
                 {{else}}
-                  <span class="badge bg-success">Closed</span>
+                <span class="badge bg-success">Closed</span>
                 {{/if}}
               </td>
               <td>
                 {{#if active}}
-                  <a href="/admin/contact-us/edit/{{_id}}" class="btn btn-sm btn-outline-primary">Mark Reviewed</a>
-                  <a href="/admin/contact-us/delete/{{_id}}" class="btn btn-sm btn-outline-danger"
-                     onclick="return confirm('Delete this application?');">Delete</a>
+                <a href="/admin/contact-us/edit/{{_id}}" class="btn btn-sm btn-outline-primary">Mark Reviewed</a>
+                <a href="/admin/contact-us/delete/{{_id}}" class="btn btn-sm btn-outline-danger"
+                  onclick="return confirm('Delete this application?');">Delete</a>
                 {{else}}
-                  <span class="text-muted me-1">No Action</span>
-                  <a href="/admin/contact-us/delete/{{_id}}" class="btn btn-sm btn-outline-danger"
-                     onclick="return confirm('Delete this application?');">Delete</a>
+                <span class="text-muted me-1">No Action</span>
+                <a href="/admin/contact-us/delete/{{_id}}" class="btn btn-sm btn-outline-danger"
+                  onclick="return confirm('Delete this application?');">Delete</a>
                 {{/if}}
               </td>
             </tr>
+            {{else}}
+
+            <tr>
+              <td colspan="9" class="text-center text-muted py-4">
+                <i class="fa fa-envelope fa-3x mb-3"></i><br>
+                No contact applications found
+              </td>
+            </tr>
+
             {{/each}}
+
           </tbody>
         </table>
       </div>
