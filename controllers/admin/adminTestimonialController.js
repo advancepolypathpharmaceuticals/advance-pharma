@@ -45,14 +45,17 @@ async function storeUpdatePage(req,res){
         data.name = req.body.name?req.body.name:data.name
         data.profession = req.body.profession?req.body.profession:data.profession
         data.message = req.body.message?req.body.message:data.message
-        if(req.file){
-            try {
-                fs.unlinkSync(data.pic)
-            } catch (error) {
-                
-            }
-            data.pic = req.file.path
+        if (req.file) {
+    if (data.pic) {
+        try {
+            fs.unlinkSync(data.pic);
+        } catch (error) {
+            console.log("Old image could not be deleted:", error.message);
         }
+    }
+
+    data.pic = req.file.path;
+}
         await data.save()
         res.redirect("/admin/testimonial")
     } catch (error) {
