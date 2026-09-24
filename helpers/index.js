@@ -5,7 +5,7 @@ hbs.registerHelper("dropdownCheck",(selected,option)=>{
 })
 
 hbs.registerHelper("dateHelper",(date)=>{
-    return new Date(date).toLocaleString()
+    return new Date(date).toLocaleString("en-GB");
 })
 
 hbs.registerHelper('eq', function (a, b) {
