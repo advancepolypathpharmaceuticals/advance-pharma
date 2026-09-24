@@ -44,11 +44,16 @@ const userUploader = multer({
 // Add resume uploader with file filtering
 const resumeUploader = multer({
   storage: multer.diskStorage({
+
     destination: function (req, file, cb) {
-      cb(null, path.join(__dirname, "../public/uploads/resume"));
+
+      const uploadPath = ensureUploadFolder("resume");
+
+      cb(null, uploadPath);
     },
 
     filename: function (req, file, cb) {
+
       const ext = path.extname(file.originalname);
 
       const uniqueName =
@@ -62,6 +67,7 @@ const resumeUploader = multer({
   }),
 
   fileFilter: function (req, file, cb) {
+
     const allowedTypes = [
       "application/pdf",
       "application/msword",
@@ -72,7 +78,10 @@ const resumeUploader = multer({
       return cb(null, true);
     }
 
-    const error = new Error("Only PDF and Word documents are allowed");
+    const error = new Error(
+      "Only PDF and Word documents are allowed"
+    );
+
     error.code = "INVALID_FILE_TYPE";
 
     cb(error, false);
