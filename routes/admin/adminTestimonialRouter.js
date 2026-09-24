@@ -1,6 +1,5 @@
 const AdminTestimonialRouter = require("express").Router()
 
-const {encoder} = require("../../middlewares/bodyParserMiddleware")
 const {testimonialUploader} = require("../../middlewares/multerMiddleware")
 const {
     homePage,
