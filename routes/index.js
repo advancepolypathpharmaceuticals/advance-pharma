@@ -63,7 +63,45 @@ Router.get("/", homePage);
 Router.get("/about", aboutPage);
 Router.get("/contact", contactPage);
 Router.get("/career", careerPage);
-Router.post("/career", encoder, resumeUploader.single("resume"), careerStorePage);
+Router.post(
+  "/career",
+  encoder,
+  (req, res, next) => {
+
+    resumeUploader.single("resume")(req, res, (err) => {
+
+      if (err) {
+
+        console.error("RESUME UPLOAD ERROR:", err);
+
+        let message = "Unable to upload resume.";
+
+        if (err.code === "LIMIT_FILE_SIZE") {
+          message = "Resume file size must be less than 5MB.";
+        }
+
+        if (err.code === "INVALID_FILE_TYPE") {
+          message = "Only PDF and Word documents are allowed.";
+        }
+
+        return res.render("careerPage", {
+          session: req.session,
+          title: "Career",
+          errorMessage: {
+            resume: message
+          },
+          data: req.body || {},
+          show: false,
+          teams: [],
+          testimonials: []
+        });
+      }
+
+      next();
+    });
+  },
+  careerStorePage
+);
 Router.get("/feature", featurePage);
 Router.get("/faq", faqPage);
 Router.get("/offer", offerPage);
